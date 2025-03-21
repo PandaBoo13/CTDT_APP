@@ -3,6 +3,8 @@ package com.example.CTDT_APP.Service;
 import com.example.CTDT_APP.DTO.Request.TaiKhoanCreationRequest;
 import com.example.CTDT_APP.DTO.Request.TaiKhoanUpdateRequest;
 import com.example.CTDT_APP.Entity.TaiKhoan;
+import com.example.CTDT_APP.Exception.AppException;
+import com.example.CTDT_APP.Exception.ErrorCode;
 import com.example.CTDT_APP.Mapper.TaiKhoanMapper;
 import com.example.CTDT_APP.Repository.TaiKhoanRepository;
 import com.example.CTDT_APP.Repository.VaiTroRepository;
@@ -23,8 +25,8 @@ public class TaiKhoanService {
     private TaiKhoanMapper taiKhoanMapper;
     public TaiKhoan createTaikhoan(TaiKhoanCreationRequest request){
         TaiKhoan taiKhoan= taiKhoanMapper.toTaiKhoan(request);
-        if(taiKhoanRepository.existsByMaTaiKhoan(request.getMaTaiKhoan())) throw new RuntimeException("Ma tai khoan da ton tai");
-        if(taiKhoanRepository.existsByTenDangNhap(request.getTenDangNhap())) throw new RuntimeException("Ten dang nhap da ton tai");
+        if(taiKhoanRepository.existsByMaTaiKhoan(request.getMaTaiKhoan())) throw new AppException(ErrorCode.TAIKHOAN_EXISTED);
+        if(taiKhoanRepository.existsByTenDangNhap(request.getTenDangNhap())) throw new AppException(ErrorCode.TENDANGNHAP_EXISTED);
         PasswordEncoder passwordEncoder= new BCryptPasswordEncoder(10);
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
 

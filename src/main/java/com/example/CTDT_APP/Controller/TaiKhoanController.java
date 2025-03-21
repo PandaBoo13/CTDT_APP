@@ -2,6 +2,7 @@ package com.example.CTDT_APP.Controller;
 
 import com.example.CTDT_APP.DTO.Request.TaiKhoanCreationRequest;
 import com.example.CTDT_APP.DTO.Request.TaiKhoanUpdateRequest;
+import com.example.CTDT_APP.DTO.Respone.ApiRespone;
 import com.example.CTDT_APP.Entity.TaiKhoan;
 import com.example.CTDT_APP.Service.TaiKhoanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,10 @@ public class TaiKhoanController {
     private TaiKhoanService taiKhoanService;
 
     @PostMapping
-    TaiKhoan createTaiKhoan(@RequestBody TaiKhoanCreationRequest request) {
-        return taiKhoanService.createTaikhoan(request);
+    public ApiRespone<TaiKhoan> createTaiKhoan(@RequestBody TaiKhoanCreationRequest request) {
+        ApiRespone apiRespone= new ApiRespone();
+        apiRespone.setResult(taiKhoanService.createTaikhoan(request));
+        return apiRespone;
     }
 
     @GetMapping
