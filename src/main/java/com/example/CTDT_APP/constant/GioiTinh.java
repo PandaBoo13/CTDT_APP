@@ -1,4 +1,4 @@
-package com.example.CTDT_APP.entity;
+package com.example.CTDT_APP.constant;
 
 public enum GioiTinh {
     MALE, FEMALE

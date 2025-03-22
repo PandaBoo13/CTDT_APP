@@ -1,7 +1,9 @@
 package com.example.CTDT_APP.entity;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -14,14 +16,16 @@ import java.time.LocalDate;
 @Builder
 public class NhanVien {
     @Id
+    @Column(name = "MaNhanVien")
     private String MaNhanVien;
-    @Column( nullable = false)
+    @Column(name = "Email")
     private String email;
-    @Column(unique = true, nullable = false)
+    @Column(name = "SoDienThoai")
     private String soDienThoai;
-    @Column(nullable = false)
+    @Column(name = "HoTen")
     private String hoTen;
+    @Column(name = "NgayThangNamSinh")
     private LocalDate ngayThangNamSinh;
-    @Column(unique = true, nullable = false)
+    @Column(name = "MaTaiKhoan")
     private String maTaikhoan;
 }

@@ -5,7 +5,6 @@ import com.example.CTDT_APP.dto.request.IntrospectRequest;
 import com.example.CTDT_APP.dto.response.AuthenticationRespone;
 import com.example.CTDT_APP.dto.response.IntrospectRespone;
 import com.example.CTDT_APP.exception.AppException;
-import com.example.CTDT_APP.exception.ErrorCode;
 import com.example.CTDT_APP.repository.TaiKhoanRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -37,11 +36,11 @@ public class AuthenticationService {
 
     public AuthenticationRespone authenticate(AuthenticationRequest request){
         var taikhoan = taiKhoanRepository.findByTenDangNhap(request.getTenDangNhap())
-                .orElseThrow(()-> new AppException(ErrorCode.TAIKHOAN_NOT_EXSITED));
+                .orElseThrow(() -> new AppException("Tai khoan khong ton tai"));
         PasswordEncoder passwordEncoder= new BCryptPasswordEncoder(10);
         Boolean authenticated= passwordEncoder.matches(request.getMatKhau()
                 ,taikhoan.getMatKhau());
-        if(!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (!authenticated) throw new AppException("Sai mat khau");
         var token= generateToken(request.getTenDangNhap());
         return AuthenticationRespone.builder()
                 .token(token)

@@ -2,13 +2,11 @@ package com.example.CTDT_APP.controller;
 
 import com.example.CTDT_APP.dto.request.AuthenticationRequest;
 import com.example.CTDT_APP.dto.request.IntrospectRequest;
-import com.example.CTDT_APP.dto.response.ApiRespone;
-import com.example.CTDT_APP.dto.response.AuthenticationRespone;
-import com.example.CTDT_APP.dto.response.IntrospectRespone;
+import com.example.CTDT_APP.dto.response.ApiResponse;
 import com.example.CTDT_APP.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,27 +18,25 @@ import java.text.ParseException;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    @Autowired
-    AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/token")
-    ApiRespone<AuthenticationRespone> authenticate (@RequestBody AuthenticationRequest request){
-        var result=authenticationService.authenticate(request);
-        return  ApiRespone.<AuthenticationRespone>builder()
-                .result(result)
+    ResponseEntity<ApiResponse> authenticate(@RequestBody AuthenticationRequest request) {
+        ApiResponse response = ApiResponse.builder()
+                .code(202)
+                .message("Authentication successful")
+                .data(authenticationService.authenticate(request))
                 .build();
-
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/introspect")
-    ApiRespone<IntrospectRespone> authenticate (@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
-        var result=authenticationService.introspectRespone(request);
-        return  ApiRespone.<IntrospectRespone>builder()
-                .result(result)
+    ResponseEntity<ApiResponse> authenticate(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
+        ApiResponse response = ApiResponse.builder()
+                .code(202)
+                .message("???")
+                .data(authenticationService.introspectRespone(request))
                 .build();
-
+        return ResponseEntity.ok(response);
     }
-
-
-
 }
