@@ -36,7 +36,6 @@ public class ChuongTrinhDaoTao {
     @JoinColumn(name = "MaNganh")
     private NganhDaoTao maNganh;
 
-    @OneToMany(mappedBy = "maCTDT")
+    @OneToMany(mappedBy = "maCTDT", fetch = FetchType.LAZY)
     private List<KeHoachHocTap> keHoachHocTaps;
-
 }

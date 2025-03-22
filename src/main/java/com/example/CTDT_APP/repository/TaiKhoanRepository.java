@@ -9,7 +9,9 @@ import java.util.Optional;
 @Repository
 public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
     boolean existsByMaTaiKhoan(String maTaiKhoan);
-    Optional<TaiKhoan> findByTenDangNhap( String tenDangNhap);
+
+    Optional<TaiKhoan> findByTenDangNhap(String tenDangNhap);
+
     boolean existsByTenDangNhap(String tenDangNhap);
 
 }

@@ -1,10 +1,7 @@
 package com.example.CTDT_APP.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +19,6 @@ public class Khoa {
     private String tenKhoa;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "maKhoa")
+    @OneToMany(mappedBy = "khoa", fetch = FetchType.LAZY)
     private List<NganhDaoTao> nganhDaoTaos;
 }

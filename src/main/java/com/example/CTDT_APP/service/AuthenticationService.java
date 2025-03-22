@@ -28,37 +28,37 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    @Autowired
-    TaiKhoanRepository taiKhoanRepository;
     @NonFinal
     @Value("${jwt.signerKey}")
-    protected  String SIGNER_KEY;
+    protected String SIGNER_KEY;
+    @Autowired
+    TaiKhoanRepository taiKhoanRepository;
 
-    public AuthenticationRespone authenticate(AuthenticationRequest request){
+    public AuthenticationRespone authenticate(AuthenticationRequest request) {
         var taikhoan = taiKhoanRepository.findByTenDangNhap(request.getTenDangNhap())
                 .orElseThrow(() -> new AppException("Tai khoan khong ton tai"));
-        PasswordEncoder passwordEncoder= new BCryptPasswordEncoder(10);
-        Boolean authenticated= passwordEncoder.matches(request.getMatKhau()
-                ,taikhoan.getMatKhau());
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        Boolean authenticated = passwordEncoder.matches(request.getMatKhau()
+                , taikhoan.getMatKhau());
         if (!authenticated) throw new AppException("Sai mat khau");
-        var token= generateToken(request.getTenDangNhap());
+        var token = generateToken(request.getTenDangNhap());
         return AuthenticationRespone.builder()
                 .token(token)
                 .authenticated(true)
                 .build();
     }
 
-    String generateToken(String tenDangNhap){
-        JWSHeader header= new JWSHeader(JWSAlgorithm.HS512);
-        JWTClaimsSet jwtClaimsSet= new JWTClaimsSet.Builder()
+    String generateToken(String tenDangNhap) {
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(tenDangNhap)
                 .issuer("App_Dev")
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
                 .build();
 
-        Payload payload= new Payload(jwtClaimsSet.toJSONObject());
-        JWSObject jwsObject= new JWSObject(header,payload);
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+        JWSObject jwsObject = new JWSObject(header, payload);
         try {
             jwsObject.sign(new MACSigner(SIGNER_KEY));
             return jwsObject.serialize();
@@ -71,10 +71,10 @@ public class AuthenticationService {
 
     public IntrospectRespone introspectRespone(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
-        JWSVerifier jwsVerifier= new MACVerifier(SIGNER_KEY.getBytes());
-        SignedJWT signedJWT= SignedJWT.parse(token);
-        Date expityTime =signedJWT.getJWTClaimsSet().getExpirationTime();
-        var verified= signedJWT.verify(jwsVerifier);
+        JWSVerifier jwsVerifier = new MACVerifier(SIGNER_KEY.getBytes());
+        SignedJWT signedJWT = SignedJWT.parse(token);
+        Date expityTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        var verified = signedJWT.verify(jwsVerifier);
         return IntrospectRespone.builder()
                 .valid(verified && expityTime.after(new Date()))
                 .build();

@@ -22,33 +22,35 @@ public class TaiKhoanService {
     private TaiKhoanRepository taiKhoanRepository;
     @Autowired
     private TaiKhoanMapper taiKhoanMapper;
-    public TaiKhoan createTaikhoan(TaiKhoanCreationRequest request){
-        TaiKhoan taiKhoan= taiKhoanMapper.toTaiKhoan(request);
+
+    public TaiKhoan createTaikhoan(TaiKhoanCreationRequest request) {
+        TaiKhoan taiKhoan = taiKhoanMapper.toTaiKhoan(request);
         if (taiKhoanRepository.existsByMaTaiKhoan(request.getMaTaiKhoan()))
             throw new AppException("Tai khoan da ton tai");
         if (taiKhoanRepository.existsByTenDangNhap(request.getTenDangNhap()))
             throw new AppException("Ten dang nhap da ton tai");
-        PasswordEncoder passwordEncoder= new BCryptPasswordEncoder(10);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
 
         return taiKhoanRepository.save(taiKhoan);
     }
-    public List<TaiKhoan> getTaiKhoan(){
+
+    public List<TaiKhoan> getTaiKhoan() {
         return taiKhoanRepository.findAll();
     }
 
-    public TaiKhoan getTaiKhoanById( String Id){
+    public TaiKhoan getTaiKhoanById(String Id) {
         return taiKhoanRepository.findById(Id).orElseThrow(() -> new AppException(" Tai khoan khong ton tai"));
     }
 
-    public TaiKhoan updateTaiKhoan(String maTaiKhoan, TaiKhoanUpdateRequest request){
-        TaiKhoan taiKhoan= getTaiKhoanById(maTaiKhoan);
-        PasswordEncoder passwordEncoder= new BCryptPasswordEncoder(10);
+    public TaiKhoan updateTaiKhoan(String maTaiKhoan, TaiKhoanUpdateRequest request) {
+        TaiKhoan taiKhoan = getTaiKhoanById(maTaiKhoan);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         return taiKhoanRepository.save(taiKhoan);
     }
 
-    public void deleteTaiKhoan(String maTaiKhoan){
+    public void deleteTaiKhoan(String maTaiKhoan) {
         taiKhoanRepository.deleteById(maTaiKhoan);
     }
 
