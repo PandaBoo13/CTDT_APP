@@ -1,9 +1,6 @@
 package com.example.CTDT_APP.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +20,6 @@ public class BacDaoTao {
     @Column(name = "ThoiGianDaoTao")
     private Float thoiGianDaoTao;
 
-    @OneToMany(mappedBy = "capBac")
+    @OneToMany(mappedBy = "capBac", fetch = FetchType.LAZY)
     private List<ChuongTrinhDaoTao> chuongTrinhDaoTao;
-
 }

@@ -10,5 +10,5 @@ public class ErrorResponse {
     @JsonProperty("error_code")
     private int code;
     @JsonProperty("error_message")
-    private String message;
+    private Object message;
 }

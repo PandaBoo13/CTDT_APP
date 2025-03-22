@@ -13,6 +13,7 @@ public class GlobalConfig {
         modelMapper
                 .getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT)
+                .setFieldMatchingEnabled(true)
                 .setSkipNullEnabled(true);
         return modelMapper;
     }
