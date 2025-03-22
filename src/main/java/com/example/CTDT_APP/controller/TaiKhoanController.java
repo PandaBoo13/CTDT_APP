@@ -2,45 +2,68 @@ package com.example.CTDT_APP.controller;
 
 import com.example.CTDT_APP.dto.request.TaiKhoanCreationRequest;
 import com.example.CTDT_APP.dto.request.TaiKhoanUpdateRequest;
-import com.example.CTDT_APP.dto.response.ApiRespone;
-import com.example.CTDT_APP.entity.TaiKhoan;
+import com.example.CTDT_APP.dto.response.ApiResponse;
 import com.example.CTDT_APP.service.TaiKhoanService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/taikhoans")
+@RequiredArgsConstructor
 public class TaiKhoanController {
-    @Autowired
-    private TaiKhoanService taiKhoanService;
+    private final TaiKhoanService taiKhoanService;
 
     @PostMapping
-    public ApiRespone<TaiKhoan> createTaiKhoan(@RequestBody TaiKhoanCreationRequest request) {
-        ApiRespone apiRespone= new ApiRespone();
-        apiRespone.setResult(taiKhoanService.createTaikhoan(request));
-        return apiRespone;
+    public ResponseEntity<ApiResponse> createTaiKhoan(@RequestBody TaiKhoanCreationRequest request) {
+        ApiResponse response = ApiResponse.builder()
+                .code(201)
+                .message("Create TaiKhoan successful")
+                .data(taiKhoanService.createTaikhoan(request))
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    List<TaiKhoan> getTaikhoan(){
-        return taiKhoanService.getTaiKhoan();
+    public ResponseEntity<ApiResponse> getTaikhoan() {
+        ApiResponse response = ApiResponse.builder()
+                .code(200)
+                .message("Get TaiKhoan successful")
+                .data(taiKhoanService.getTaiKhoan())
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{mataikhoan}")
-    TaiKhoan getTaiKhoanById(@PathVariable("mataikhoan") String mataikhoan){
-        return taiKhoanService.getTaiKhoanById(mataikhoan);
+    ResponseEntity<ApiResponse> getTaiKhoanById(@PathVariable("mataikhoan") String mataikhoan) {
+        ApiResponse response = ApiResponse.builder()
+                .code(200)
+                .message("Get TaiKhoan successful")
+                .data(taiKhoanService.getTaiKhoanById(mataikhoan))
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{maTaiKhoan}")
-    TaiKhoan putTaiKhoanById(@PathVariable("maTaiKhoan") String maTaiKhoan, @RequestBody TaiKhoanUpdateRequest request){
-        return taiKhoanService.updateTaiKhoan(maTaiKhoan,request);
+    ResponseEntity<ApiResponse> updateTaiKhoanById(
+            @PathVariable("maTaiKhoan") String maTaiKhoan,
+            @RequestBody TaiKhoanUpdateRequest request
+    ) {
+        ApiResponse response = ApiResponse.builder()
+                .code(202)
+                .message("Update TaiKhoan successful")
+                .data(taiKhoanService.updateTaiKhoan(maTaiKhoan, request))
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{maTaiKhoan}")
-    void deleteTaiKhoan (@PathVariable("maTaiKhoan")String maTaiKhoan ){
+    ResponseEntity<ApiResponse> deleteTaiKhoan(@PathVariable("maTaiKhoan") String maTaiKhoan) {
         taiKhoanService.deleteTaiKhoan(maTaiKhoan);
+        ApiResponse response = ApiResponse.builder()
+                .code(202)
+                .message("Delete TaiKhoan successful")
+                .build();
+        return ResponseEntity.ok(response);
     }
-
 }

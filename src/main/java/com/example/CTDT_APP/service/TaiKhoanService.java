@@ -4,7 +4,6 @@ import com.example.CTDT_APP.dto.request.TaiKhoanCreationRequest;
 import com.example.CTDT_APP.dto.request.TaiKhoanUpdateRequest;
 import com.example.CTDT_APP.entity.TaiKhoan;
 import com.example.CTDT_APP.exception.AppException;
-import com.example.CTDT_APP.exception.ErrorCode;
 import com.example.CTDT_APP.mapper.TaiKhoanMapper;
 import com.example.CTDT_APP.repository.TaiKhoanRepository;
 import com.example.CTDT_APP.repository.VaiTroRepository;
@@ -25,8 +24,10 @@ public class TaiKhoanService {
     private TaiKhoanMapper taiKhoanMapper;
     public TaiKhoan createTaikhoan(TaiKhoanCreationRequest request){
         TaiKhoan taiKhoan= taiKhoanMapper.toTaiKhoan(request);
-        if(taiKhoanRepository.existsByMaTaiKhoan(request.getMaTaiKhoan())) throw new AppException(ErrorCode.TAIKHOAN_EXISTED);
-        if(taiKhoanRepository.existsByTenDangNhap(request.getTenDangNhap())) throw new AppException(ErrorCode.TENDANGNHAP_EXISTED);
+        if (taiKhoanRepository.existsByMaTaiKhoan(request.getMaTaiKhoan()))
+            throw new AppException("Tai khoan da ton tai");
+        if (taiKhoanRepository.existsByTenDangNhap(request.getTenDangNhap()))
+            throw new AppException("Ten dang nhap da ton tai");
         PasswordEncoder passwordEncoder= new BCryptPasswordEncoder(10);
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
 
@@ -37,7 +38,7 @@ public class TaiKhoanService {
     }
 
     public TaiKhoan getTaiKhoanById( String Id){
-        return taiKhoanRepository.findById(Id).orElseThrow(() -> new RuntimeException(" Tai khoan khong ton tai"));
+        return taiKhoanRepository.findById(Id).orElseThrow(() -> new AppException(" Tai khoan khong ton tai"));
     }
 
     public TaiKhoan updateTaiKhoan(String maTaiKhoan, TaiKhoanUpdateRequest request){
