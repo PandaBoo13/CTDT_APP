@@ -1,6 +1,5 @@
 package com.example.CTDT_APP.exception;
 
-import com.example.CTDT_APP.dto.response.ApiResponse;
 import com.example.CTDT_APP.dto.response.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

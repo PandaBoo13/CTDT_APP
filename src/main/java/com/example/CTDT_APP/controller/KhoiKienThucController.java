@@ -1,7 +1,6 @@
 package com.example.CTDT_APP.controller;
 
 import com.example.CTDT_APP.dto.request.KTTCreationRequest;
-import com.example.CTDT_APP.dto.request.KhoaCreationRequest;
 import com.example.CTDT_APP.dto.response.ApiResponse;
 import com.example.CTDT_APP.service.KhoiKienThucService;
 import lombok.RequiredArgsConstructor;
