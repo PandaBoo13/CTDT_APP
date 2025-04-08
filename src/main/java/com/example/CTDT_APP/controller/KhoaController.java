@@ -19,7 +19,7 @@ public class KhoaController {
     public ResponseEntity<ApiResponse> getAllKhoa() {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Lay danh sach khoa thanh cong")
+                .message("Lay danh sach khoa thanh cong ssdsdsd dsdsds")
                 .data(khoaService.getAllKhoa())
                 .build();
         return ResponseEntity.ok(response);

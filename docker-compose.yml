@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-ctdt
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: CTDT
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ctdt-data:/var/lib/mysql
+    networks:
+      - ctdt-network
+
+  app:
+    build: .   # build from Dockerfile
+    container_name: ctdt-app
+    depends_on:
+      condition: service_healthy
+      mysql:
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:mysql://mysql:3306/CTDT
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+    networks:
+      - ctdt-network
+
+volumes:
+  ctdt-data:
+
+networks:
+  ctdt-network:
+    driver: bridge
+
+# docker-compose up --build -d
