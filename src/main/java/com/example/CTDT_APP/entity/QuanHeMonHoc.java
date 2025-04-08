@@ -1,5 +1,6 @@
 package com.example.CTDT_APP.entity;
 
+import com.example.CTDT_APP.constant.DieuKienMonHoc;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,13 +17,13 @@ public class QuanHeMonHoc {
     @MapsId("maMonChinh")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "MaMonChinh")
-    private MonHoc maMonChinh;
+    private MonHoc monHocChinh;
 
     @MapsId("maMonLienQuan")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "MaMonLienQuan")
-    private MonHoc maMonLienQuan;
+    private MonHoc monHocLienQuan;
 
     @Column(name = "LoaiDieuKien")
-    private String loaiDieuKien;
+    private DieuKienMonHoc loaiDieuKien;
 }

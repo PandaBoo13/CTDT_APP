@@ -1,5 +1,6 @@
 package com.example.CTDT_APP.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,15 +12,16 @@ import java.util.List;
 @Entity
 public class BacDaoTao {
     @Id
-    @Column(name = "MaBac", nullable = false, length = 21)
+    @Column(name = "MaBac")
     private String maBac;
 
-    @Column(name = "TenCapBac", length = 100)
+    @Column(name = "TenCapBac")
     private String tenCapBac;
 
     @Column(name = "ThoiGianDaoTao")
     private Float thoiGianDaoTao;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "capBac", fetch = FetchType.LAZY)
-    private List<ChuongTrinhDaoTao> chuongTrinhDaoTao;
+    private List<ChuongTrinhDaoTao> chuongTrinhDaoTaos;
 }

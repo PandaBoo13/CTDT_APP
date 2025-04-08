@@ -4,6 +4,8 @@ import com.example.CTDT_APP.constant.NgonNgu;
 import com.example.CTDT_APP.constant.TrangThai;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class MonHocCreationRequest {
     private String maMon;
@@ -13,7 +15,8 @@ public class MonHocCreationRequest {
     private int soTietBaiTap;
     private int soTietThucHanh;
     private int soTietTuHoc;
-    private NgonNgu ngonNguGiangDay;
     private TrangThai trangThai;
+    private NgonNgu ngonNguGiangDay;
     private String maKhoi;
+    private List<QuanHeMonHocRequest> quanHeMonHocs;
 }

@@ -3,18 +3,17 @@ package com.example.CTDT_APP.entity;
 import com.example.CTDT_APP.constant.TrangThai;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
 public class MonHoc {
-    @Column(name = "TrangThai")
-    @Enumerated(EnumType.STRING)
-    TrangThai trangThai;
     @Id
     @Column(name = "MaMon")
     private String maMon;
@@ -32,12 +31,14 @@ public class MonHoc {
     private Integer soTietTuHoc;
     @Column(name = "NgonNguGiangDay")
     private String ngonNguGiangDay;
+    @Column(name = "TrangThai")
+    @Enumerated(EnumType.STRING)
+    private TrangThai trangThai;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaKhoi")
     private KhoiKienThuc khoiKienThuc;
-
     @JsonIgnore
-    @OneToMany(mappedBy = "maMonChinh")
+    @OneToMany(mappedBy = "monHocLienQuan")
     private List<QuanHeMonHoc> quanHeMonHocs;
 }
