@@ -22,4 +22,5 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 jwt:
-  signerKey: "PzcEXHkagVn34ElrlcOUQL/zHeIg86xNVPk5Fj94TzH0RyCLngqSyPmzUtWc7yyP"
+  signerKey: "PzcEXHkagVn34ElrlcOUQLazHeIg86xNVPk5Fj94TzH0RyCLngqSyPmzUtWc7yyP"
+  expirationTime: 86400000

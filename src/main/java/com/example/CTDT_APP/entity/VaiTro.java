@@ -3,7 +3,10 @@ package com.example.CTDT_APP.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,4 +22,7 @@ public class VaiTro {
     private String tenVaiTro;
     @Column(name = "MoTa")
     private String moTa;
+
+    @OneToMany(mappedBy = "vaiTro")
+    private List<TaiKhoan> taiKhoans;
 }
