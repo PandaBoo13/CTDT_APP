@@ -5,11 +5,17 @@ import com.example.CTDT_APP.dto.request.TaiKhoanUpdateRequest;
 import com.example.CTDT_APP.dto.response.ApiResponse;
 import com.example.CTDT_APP.service.TaiKhoanService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
-@RequestMapping("/taikhoans")
+@RequestMapping("taikhoans")
 @RequiredArgsConstructor
 public class TaiKhoanController {
     private final TaiKhoanService taiKhoanService;
@@ -26,6 +32,7 @@ public class TaiKhoanController {
 
     @GetMapping
     public ResponseEntity<ApiResponse> getTaikhoan() {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         ApiResponse response = ApiResponse.builder()
                 .code(200)
                 .message("Get TaiKhoan successful")

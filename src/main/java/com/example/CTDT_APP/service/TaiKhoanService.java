@@ -8,6 +8,8 @@ import com.example.CTDT_APP.mapper.TaiKhoanMapper;
 import com.example.CTDT_APP.repository.TaiKhoanRepository;
 import com.example.CTDT_APP.repository.VaiTroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,21 +37,25 @@ public class TaiKhoanService {
         return taiKhoanRepository.save(taiKhoan);
     }
 
+    @PreAuthorize("hasRole('QTV')")
     public List<TaiKhoan> getTaiKhoan() {
         return taiKhoanRepository.findAll();
     }
 
-    public TaiKhoan getTaiKhoanById(String Id) {
-        return taiKhoanRepository.findById(Id).orElseThrow(() -> new AppException(" Tai khoan khong ton tai"));
+    @PostAuthorize("returnObject.tenDangNhap==authentication.name")
+    public TaiKhoan getTaiKhoanById(String id) {
+        return taiKhoanRepository.findById(id)
+                .orElseThrow(() -> new AppException("Tai khoan khong ton tai"));
     }
 
+    @PreAuthorize("hasRole('QTV')")
     public TaiKhoan updateTaiKhoan(String maTaiKhoan, TaiKhoanUpdateRequest request) {
         TaiKhoan taiKhoan = getTaiKhoanById(maTaiKhoan);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         return taiKhoanRepository.save(taiKhoan);
     }
-
+    @PreAuthorize("hasRole('QTV')")
     public void deleteTaiKhoan(String maTaiKhoan) {
         taiKhoanRepository.deleteById(maTaiKhoan);
     }

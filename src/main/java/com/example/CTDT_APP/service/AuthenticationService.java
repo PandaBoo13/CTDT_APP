@@ -4,6 +4,7 @@ import com.example.CTDT_APP.dto.request.AuthenticationRequest;
 import com.example.CTDT_APP.dto.request.IntrospectRequest;
 import com.example.CTDT_APP.dto.response.AuthenticationRespone;
 import com.example.CTDT_APP.dto.response.IntrospectRespone;
+import com.example.CTDT_APP.entity.TaiKhoan;
 import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.repository.TaiKhoanRepository;
 import com.nimbusds.jose.*;
@@ -41,20 +42,22 @@ public class AuthenticationService {
         Boolean authenticated = passwordEncoder.matches(request.getMatKhau()
                 , taikhoan.getMatKhau());
         if (!authenticated) throw new AppException("Sai mat khau");
-        var token = generateToken(request.getTenDangNhap());
+        var token = generateToken(taikhoan);
         return AuthenticationRespone.builder()
                 .token(token)
                 .authenticated(true)
                 .build();
     }
 
-    String generateToken(String tenDangNhap) {
+    String generateToken(TaiKhoan taiKhoan) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(tenDangNhap)
+                .subject(taiKhoan.getTenDangNhap())
                 .issuer("App_Dev")
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+                .claim("role", taiKhoan.getMaVaiTro())
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
