@@ -9,8 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class TaiKhoanCreationRequest {
-    private String maTaiKhoan;
     private String tenDangNhap;
     private String matKhau;
-    private String maVaiTro;
 }

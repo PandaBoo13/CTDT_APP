@@ -1,6 +1,8 @@
 package com.example.CTDT_APP.entity;
 
 import com.example.CTDT_APP.util.GenerateNanoID;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,11 +30,15 @@ public class TaiKhoan implements UserDetails {
     private String matKhau;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "MaVaiTro")
     private VaiTro vaiTro;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (vaiTro == null || vaiTro.getMaVaiTro() == null) {
+            return List.of(); // hoặc throw exception, hoặc log cảnh báo
+        }
         return List.of(new SimpleGrantedAuthority(vaiTro.getMaVaiTro()));
     }
 

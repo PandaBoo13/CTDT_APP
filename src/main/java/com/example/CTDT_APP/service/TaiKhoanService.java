@@ -3,10 +3,12 @@ package com.example.CTDT_APP.service;
 import com.example.CTDT_APP.dto.request.TaiKhoanCreationRequest;
 import com.example.CTDT_APP.dto.request.TaiKhoanUpdateRequest;
 import com.example.CTDT_APP.entity.TaiKhoan;
+import com.example.CTDT_APP.entity.VaiTro;
 import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.mapper.TaiKhoanMapper;
 import com.example.CTDT_APP.repository.TaiKhoanRepository;
 import com.example.CTDT_APP.repository.VaiTroRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,39 +25,39 @@ public class TaiKhoanService {
     @Autowired
     private TaiKhoanRepository taiKhoanRepository;
     @Autowired
-    private TaiKhoanMapper taiKhoanMapper;
+    private ModelMapper taiKhoanMapper;
 
     public TaiKhoan createTaikhoan(TaiKhoanCreationRequest request) {
-        TaiKhoan taiKhoan = taiKhoanMapper.toTaiKhoan(request);
-        if (taiKhoanRepository.existsByMaTaiKhoan(request.getMaTaiKhoan()))
-            throw new AppException("Tai khoan da ton tai");
+        TaiKhoan taiKhoan = taiKhoanMapper.map(request,TaiKhoan.class);
         if (taiKhoanRepository.existsByTenDangNhap(request.getTenDangNhap()))
             throw new AppException("Ten dang nhap da ton tai");
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
+        VaiTro vaiTroMacDinh = vaiTroRepository.findById("EMPLOYEE")
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy vai trò EMPLOYEE"));
 
+        taiKhoan.setVaiTro(vaiTroMacDinh);
         return taiKhoanRepository.save(taiKhoan);
     }
 
-    @PreAuthorize("hasRole('QTV')")
     public List<TaiKhoan> getTaiKhoan() {
         return taiKhoanRepository.findAll();
     }
 
-    @PostAuthorize("returnObject.tenDangNhap==authentication.name")
+
     public TaiKhoan getTaiKhoanById(String id) {
         return taiKhoanRepository.findById(id)
                 .orElseThrow(() -> new AppException("Tai khoan khong ton tai"));
     }
 
-    @PreAuthorize("hasRole('QTV')")
+
     public TaiKhoan updateTaiKhoan(String maTaiKhoan, TaiKhoanUpdateRequest request) {
         TaiKhoan taiKhoan = getTaiKhoanById(maTaiKhoan);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         return taiKhoanRepository.save(taiKhoan);
     }
-    @PreAuthorize("hasRole('QTV')")
+
     public void deleteTaiKhoan(String maTaiKhoan) {
         taiKhoanRepository.deleteById(maTaiKhoan);
     }
