@@ -9,7 +9,7 @@ import lombok.Setter;
 @Entity
 public class KeHoachHocTap {
     @Id
-    @Column(name = "MaKHHT", nullable = false, length = 21)
+    @Column(name = "MaKHHT")
     private String maKHHT;
 
     @ManyToOne(fetch = FetchType.LAZY)

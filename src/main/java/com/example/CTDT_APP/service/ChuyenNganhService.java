@@ -2,6 +2,7 @@ package com.example.CTDT_APP.service;
 
 import com.example.CTDT_APP.dto.request.ChuyenNganhCreationRequest;
 import com.example.CTDT_APP.dto.request.ChuyenNganhUpdateRequest;
+import com.example.CTDT_APP.dto.response.ChuyenNganhReponse;
 import com.example.CTDT_APP.entity.ChuyenNganh;
 import com.example.CTDT_APP.entity.NganhDaoTao;
 import com.example.CTDT_APP.exception.AppException;
@@ -21,11 +22,14 @@ public class ChuyenNganhService {
     private final NganhDaoTaoRepository nganhDaoTaoRepository;
     private final ModelMapper mapper;
 
-    public List<ChuyenNganh> getAllChuyenNganh() {
-        return chuyenNganhRepo.findAll();
+    public List<ChuyenNganhReponse> getAllChuyenNganh() {
+        return chuyenNganhRepo.findAll()
+                .stream()
+                .map(chuyenNganh -> mapper.map(chuyenNganh, ChuyenNganhReponse.class))
+                .toList();
     }
 
-    public ChuyenNganh createChuyenNganh(ChuyenNganhCreationRequest req) {
+    public ChuyenNganhReponse createChuyenNganh(ChuyenNganhCreationRequest req) {
         if (chuyenNganhRepo.existsById(req.getMaChuyenNganh())) {
             throw new AppException("Chuyen nganh da ton tai");
         }
@@ -34,12 +38,12 @@ public class ChuyenNganhService {
                 .orElseThrow(() -> new AppException("Khong tim thay nganh dao tao"));
 
         ChuyenNganh chuyenNganh = mapper.map(req, ChuyenNganh.class);
-        chuyenNganh.setMaNganh(nganhDaoTao);
+        chuyenNganh.setNganhDaoTao(nganhDaoTao);
 
-        return chuyenNganhRepo.save(chuyenNganh);
+        return mapper.map(chuyenNganhRepo.save(chuyenNganh), ChuyenNganhReponse.class);
     }
 
-    public ChuyenNganh updateChuyenNganh(String maChuyenNganh, ChuyenNganhUpdateRequest req) {
+    public ChuyenNganhReponse updateChuyenNganh(String maChuyenNganh, ChuyenNganhUpdateRequest req) {
         NganhDaoTao nganhDaoTao = nganhDaoTaoRepository.findById(req.getMaNganh())
                 .orElseThrow(() -> new AppException("Khong tim thay nganh dao tao"));
 
@@ -47,9 +51,9 @@ public class ChuyenNganhService {
                 .orElseThrow(() -> new AppException("Khong tim thay chuyen nganh"));
 
         mapper.map(req, chuyenNganh);
-        chuyenNganh.setMaNganh(nganhDaoTao);
+        chuyenNganh.setNganhDaoTao(nganhDaoTao);
 
-        return chuyenNganhRepo.save(chuyenNganh);
+        return mapper.map(chuyenNganhRepo.save(chuyenNganh), ChuyenNganhReponse.class);
     }
 
     public void deleteChuyenNganh(String maChuyenNganh) {

@@ -17,12 +17,12 @@ import java.util.Objects;
 public class NamCtdtId implements Serializable {
     private static final long serialVersionUID = -7453805339490457690L;
     @NotNull
-    @Column(name = "Nam", nullable = false)
+    @Column(name = "Nam")
     private Integer nam;
 
     @Size(max = 21)
     @NotNull
-    @Column(name = "MaCTDT", nullable = false, length = 21)
+    @Column(name = "MaCTDT")
     private String maCTDT;
 
     @Override

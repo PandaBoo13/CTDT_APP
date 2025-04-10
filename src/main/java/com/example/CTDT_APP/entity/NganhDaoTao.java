@@ -1,9 +1,11 @@
 package com.example.CTDT_APP.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -19,8 +21,12 @@ public class NganhDaoTao {
     @Column(name = "TenNganhTA")
     private String tenNganhTA;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "NgayTao")
+    @CreationTimestamp
+    @Temporal(TemporalType.DATE)
+    private LocalDate ngayTao;
+
+    @ManyToOne
     @JoinColumn(name = "MaKhoa")
     private Khoa khoa;
 }

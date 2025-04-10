@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -18,10 +20,14 @@ public class ChuyenNganh {
     @Column(name = "TenChuyenNganh")
     private String tenChuyenNganh;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "MaNganh")
-    private NganhDaoTao maNganh;
+    private NganhDaoTao nganhDaoTao;
+
+    @Column(name = "NgayTao")
+    @CreationTimestamp
+    @Temporal(TemporalType.DATE)
+    private LocalDate ngayTao;
 
     @JsonIgnore
     @OneToMany(mappedBy = "maChuyenNganh", fetch = FetchType.LAZY)

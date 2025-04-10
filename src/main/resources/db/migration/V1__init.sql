@@ -1,185 +1,280 @@
--- 1. VaiTro
-CREATE TABLE VaiTro (
-                        MaVaiTro VARCHAR(21) PRIMARY KEY,
-                        TenVaiTro VARCHAR(100),
-                        MoTa TEXT
+create table BacDaoTao
+(
+    MaBac          varchar(21)              not null
+        primary key,
+    TenCapBac      varchar(100)             null,
+    ThoiGianDaoTao float                    null,
+    NgayTao        date default (curdate()) null
 );
 
--- 2. Quyen
-CREATE TABLE Quyen (
-                       MaQuyen VARCHAR(21) PRIMARY KEY,
-                       TenQuyen VARCHAR(100)
+create table HeDaoTao
+(
+    MaHe  varchar(21)  not null
+        primary key,
+    TenHe varchar(100) null
 );
 
--- 3. Quyen_VaiTro
-CREATE TABLE Quyen_VaiTro (
-                              MaVaiTro VARCHAR(21),
-                              MaQuyen VARCHAR(21),
-                              PRIMARY KEY (MaVaiTro, MaQuyen),
-                              FOREIGN KEY (MaVaiTro) REFERENCES VaiTro(MaVaiTro),
-                              FOREIGN KEY (MaQuyen) REFERENCES Quyen(MaQuyen)
+create table Khoa
+(
+    MaKhoa  varchar(21)              not null
+        primary key,
+    TenKhoa varchar(100)             null,
+    NgayTao date default (curdate()) null
 );
 
--- 4. TaiKhoan
-CREATE TABLE TaiKhoan (
-                          MaTaiKhoan VARCHAR(21) PRIMARY KEY,
-                          TenDangNhap VARCHAR(50) UNIQUE,
-                          MatKhau VARCHAR(255),
-                          MaVaiTro VARCHAR(21),
-                          FOREIGN KEY (MaVaiTro) REFERENCES VaiTro(MaVaiTro)
+create table KhoiKienThuc
+(
+    MaKhoi  varchar(21)  not null
+        primary key,
+    TenKhoi varchar(100) null,
+    MoTa    text         null
 );
 
--- 5. QuanTriVien
-CREATE TABLE QuanTriVien (
-                             MaQTV VARCHAR(21) PRIMARY KEY,
-                             Email VARCHAR(100),
-                             SoDienThoai VARCHAR(15),
-                             HoTen VARCHAR(100),
-                             NgayThangNamSinh DATE,
-                             GioiTinh VARCHAR(10),
-                             MaTaiKhoan VARCHAR(21),
-                             FOREIGN KEY (MaTaiKhoan) REFERENCES TaiKhoan(MaTaiKhoan)
+create table LoaiMonHoc
+(
+    MaLoaiMH varchar(21)  not null
+        primary key,
+    TenLoai  varchar(100) null
 );
 
--- 6. NhanVien
-CREATE TABLE NhanVien (
-                          MaNhanVien VARCHAR(21) PRIMARY KEY,
-                          Email VARCHAR(100),
-                          SoDienThoai VARCHAR(15),
-                          HoTen VARCHAR(100),
-                          NgayThangNamSinh DATE,
-                          GioiTinh VARCHAR(10),
-                          MaTaiKhoan VARCHAR(21),
-                          FOREIGN KEY (MaTaiKhoan) REFERENCES TaiKhoan(MaTaiKhoan)
+create table MonHoc
+(
+    MaMon           varchar(21)  not null
+        primary key,
+    TenMon          varchar(100) null,
+    SoTinChi        int          null,
+    SoTietLyThuyet  int          null,
+    SoTietBaiTap    int          null,
+    SoTietThucHanh  int          null,
+    SoTietTuHoc     int          null,
+    NgonNguGiangDay varchar(21)  null,
+    TrangThai       varchar(21)  null,
+    MaKhoi          varchar(21)  null,
+    constraint MonHoc_ibfk_1
+        foreign key (MaKhoi) references KhoiKienThuc (MaKhoi)
 );
 
--- 7. Khoa
-CREATE TABLE Khoa (
-                      MaKhoa VARCHAR(21) PRIMARY KEY,
-                      TenKhoa VARCHAR(100)
+create index MaKhoi
+    on MonHoc (MaKhoi);
+
+create table NamDaoTao
+(
+    Nam int not null
+        primary key
 );
 
--- 8. NganhDaoTao
-CREATE TABLE NganhDaoTao (
-                             MaNganh VARCHAR(21) PRIMARY KEY,
-                             TenNganhTV VARCHAR(100),
-                             TenNganhTA VARCHAR(100),
-                             MaKhoa VARCHAR(21),
-                             FOREIGN KEY (MaKhoa) REFERENCES Khoa(MaKhoa)
+create table NganhDaoTao
+(
+    MaNganh    varchar(21)              not null
+        primary key,
+    TenNganhTV varchar(100)             null,
+    TenNganhTA varchar(100)             null,
+    MaKhoa     varchar(21)              null,
+    NgayTao    date default (curdate()) null,
+    constraint NganhDaoTao_ibfk_1
+        foreign key (MaKhoa) references Khoa (MaKhoa)
 );
 
--- 9. ChuyenNganh
-CREATE TABLE ChuyenNganh (
-                             MaChuyenNganh VARCHAR(21) PRIMARY KEY,
-                             TenChuyenNganh VARCHAR(100),
-                             MaNganh VARCHAR(21),
-                             FOREIGN KEY (MaNganh) REFERENCES NganhDaoTao(MaNganh)
+create table ChuongTrinhDaoTao
+(
+    MaCTDT    varchar(21)  not null
+        primary key,
+    TenCTDT   varchar(100) null,
+    MoTa      text         null,
+    TrangThai varchar(21)  null,
+    CapBac    varchar(21)  null,
+    MaHe      varchar(21)  null,
+    MaNganh   varchar(21)  null,
+    constraint ChuongTrinhDaoTao_ibfk_1
+        foreign key (CapBac) references BacDaoTao (MaBac),
+    constraint ChuongTrinhDaoTao_ibfk_2
+        foreign key (MaHe) references HeDaoTao (MaHe),
+    constraint ChuongTrinhDaoTao_ibfk_3
+        foreign key (MaNganh) references NganhDaoTao (MaNganh)
 );
 
--- 10. HeDaoTao
-CREATE TABLE HeDaoTao (
-                          MaHe VARCHAR(21) PRIMARY KEY,
-                          TenHe VARCHAR(100)
+create index CapBac
+    on ChuongTrinhDaoTao (CapBac);
+
+create index MaHe
+    on ChuongTrinhDaoTao (MaHe);
+
+create index MaNganh
+    on ChuongTrinhDaoTao (MaNganh);
+
+create table ChuyenNganh
+(
+    MaChuyenNganh  varchar(21)              not null
+        primary key,
+    TenChuyenNganh varchar(100)             null,
+    MaNganh        varchar(21)              null,
+    NgayTao        date default (curdate()) null,
+    constraint ChuyenNganh_ibfk_1
+        foreign key (MaNganh) references NganhDaoTao (MaNganh)
 );
 
--- 11. BacDaoTao
-CREATE TABLE BacDaoTao (
-                           MaBac VARCHAR(21) PRIMARY KEY,
-                           TenCapBac VARCHAR(100),
-                           ThoiGianDaoTao FLOAT
+create index MaNganh
+    on ChuyenNganh (MaNganh);
+
+create table KeHoachHocTap
+(
+    MaKHHT        varchar(21) not null
+        primary key,
+    MaCTDT        varchar(21) null,
+    MaChuyenNganh varchar(21) null,
+    MoTa          text        null,
+    constraint KeHoachHocTap_ibfk_1
+        foreign key (MaCTDT) references ChuongTrinhDaoTao (MaCTDT),
+    constraint KeHoachHocTap_ibfk_2
+        foreign key (MaChuyenNganh) references ChuyenNganh (MaChuyenNganh)
 );
 
--- 12. ChuongTrinhDaoTao
-CREATE TABLE ChuongTrinhDaoTao (
-                                   MaCTDT VARCHAR(21) PRIMARY KEY,
-                                   TenCTDT VARCHAR(100),
-                                   MoTa TEXT,
-                                   TrangThai VARCHAR(21),
-                                   CapBac VARCHAR(21),
-                                   MaHe VARCHAR(21),
-                                   MaNganh VARCHAR(21),
-                                   FOREIGN KEY (CapBac) REFERENCES BacDaoTao(MaBac),
-                                   FOREIGN KEY (MaHe) REFERENCES HeDaoTao(MaHe),
-                                   FOREIGN KEY (MaNganh) REFERENCES NganhDaoTao(MaNganh)
+create index MaCTDT
+    on KeHoachHocTap (MaCTDT);
+
+create index MaChuyenNganh
+    on KeHoachHocTap (MaChuyenNganh);
+
+create table KiHoc
+(
+    MaKi   varchar(21) not null
+        primary key,
+    Ki     int         null,
+    MaKHHT varchar(21) null,
+    constraint KiHoc_ibfk_1
+        foreign key (MaKHHT) references KeHoachHocTap (MaKHHT)
 );
 
--- 13. NamDaoTao
-CREATE TABLE NamDaoTao (
-                           Nam INT PRIMARY KEY
+create index MaKHHT
+    on KiHoc (MaKHHT);
+
+create table KiHoc_MonHoc
+(
+    MaKi     varchar(21) not null,
+    MaMon    varchar(21) not null,
+    MaLoaiMH varchar(21) null,
+    primary key (MaKi, MaMon),
+    constraint KiHoc_MonHoc_ibfk_1
+        foreign key (MaKi) references KiHoc (MaKi),
+    constraint KiHoc_MonHoc_ibfk_2
+        foreign key (MaMon) references MonHoc (MaMon),
+    constraint KiHoc_MonHoc_ibfk_3
+        foreign key (MaLoaiMH) references LoaiMonHoc (MaLoaiMH)
 );
 
--- 14. Nam_CTDT
-CREATE TABLE Nam_CTDT (
-                          Nam INT,
-                          MaCTDT VARCHAR(21),
-                          PRIMARY KEY (Nam, MaCTDT),
-                          FOREIGN KEY (Nam) REFERENCES NamDaoTao(Nam),
-                          FOREIGN KEY (MaCTDT) REFERENCES ChuongTrinhDaoTao(MaCTDT)
+create index MaLoaiMH
+    on KiHoc_MonHoc (MaLoaiMH);
+
+create index MaMon
+    on KiHoc_MonHoc (MaMon);
+
+create table Nam_CTDT
+(
+    Nam    int         not null,
+    MaCTDT varchar(21) not null,
+    primary key (Nam, MaCTDT),
+    constraint Nam_CTDT_ibfk_1
+        foreign key (Nam) references NamDaoTao (Nam),
+    constraint Nam_CTDT_ibfk_2
+        foreign key (MaCTDT) references ChuongTrinhDaoTao (MaCTDT)
 );
 
--- 15. KeHoachHocTap
-CREATE TABLE KeHoachHocTap (
-                               MaKHHT VARCHAR(21) PRIMARY KEY,
-                               MaCTDT VARCHAR(21),
-                               MaChuyenNganh VARCHAR(21),
-                               MoTa TEXT,
-                               FOREIGN KEY (MaCTDT) REFERENCES ChuongTrinhDaoTao(MaCTDT),
-                               FOREIGN KEY (MaChuyenNganh) REFERENCES ChuyenNganh(MaChuyenNganh)
+create index MaCTDT
+    on Nam_CTDT (MaCTDT);
+
+create index MaKhoa
+    on NganhDaoTao (MaKhoa);
+
+create table QuanHeMonHoc
+(
+    MaMonChinh    varchar(21) not null,
+    MaMonLienQuan varchar(21) not null,
+    LoaiDieuKien  varchar(21) null,
+    primary key (MaMonChinh, MaMonLienQuan),
+    constraint QuanHeMonHoc_ibfk_1
+        foreign key (MaMonChinh) references MonHoc (MaMon),
+    constraint QuanHeMonHoc_ibfk_2
+        foreign key (MaMonLienQuan) references MonHoc (MaMon)
 );
 
--- 16. KhoiKienThuc
-CREATE TABLE KhoiKienThuc (
-                              MaKhoi VARCHAR(21) PRIMARY KEY,
-                              TenKhoi VARCHAR(100),
-                              MoTa TEXT
+create index MaMonLienQuan
+    on QuanHeMonHoc (MaMonLienQuan);
+
+create table Quyen
+(
+    MaQuyen  varchar(21)  not null
+        primary key,
+    TenQuyen varchar(100) null
 );
 
--- 17. MonHoc
-CREATE TABLE MonHoc (
-                        MaMon VARCHAR(21) PRIMARY KEY,
-                        TenMon VARCHAR(100),
-                        SoTinChi INT,
-                        SoTietLyThuyet INT,
-                        SoTietBaiTap INT,
-                        SoTietThucHanh INT,
-                        SoTietTuHoc INT,
-                        NgonNguGiangDay VARCHAR(21),
-                        TrangThai VARCHAR(21),
-                        MaKhoi VARCHAR(21),
-                        FOREIGN KEY (MaKhoi) REFERENCES KhoiKienThuc(MaKhoi)
+create table VaiTro
+(
+    MaVaiTro  varchar(21)  not null
+        primary key,
+    TenVaiTro varchar(100) null,
+    MoTa      text         null
 );
 
--- 18. QuanHeMonHoc
-CREATE TABLE QuanHeMonHoc (
-                              MaMonChinh VARCHAR(21),
-                              MaMonLienQuan VARCHAR(21),
-                              LoaiDieuKien VARCHAR(21),
-                              PRIMARY KEY (MaMonChinh, MaMonLienQuan),
-                              FOREIGN KEY (MaMonChinh) REFERENCES MonHoc(MaMon),
-                              FOREIGN KEY (MaMonLienQuan) REFERENCES MonHoc(MaMon)
+create table Quyen_VaiTro
+(
+    MaVaiTro varchar(21) not null,
+    MaQuyen  varchar(21) not null,
+    primary key (MaVaiTro, MaQuyen),
+    constraint Quyen_VaiTro_ibfk_1
+        foreign key (MaVaiTro) references VaiTro (MaVaiTro),
+    constraint Quyen_VaiTro_ibfk_2
+        foreign key (MaQuyen) references Quyen (MaQuyen)
 );
 
--- 19. LoaiMonHoc
-CREATE TABLE LoaiMonHoc (
-                            MaLoaiMH VARCHAR(21) PRIMARY KEY,
-                            TenLoai VARCHAR(100)
+create index MaQuyen
+    on Quyen_VaiTro (MaQuyen);
+
+create table TaiKhoan
+(
+    MaTaiKhoan  varchar(21)  not null
+        primary key,
+    TenDangNhap varchar(50)  null,
+    MatKhau     varchar(255) null,
+    MaVaiTro    varchar(21)  null,
+    constraint TenDangNhap
+        unique (TenDangNhap),
+    constraint TaiKhoan_ibfk_1
+        foreign key (MaVaiTro) references VaiTro (MaVaiTro)
 );
 
--- 20. KiHoc
-CREATE TABLE KiHoc (
-                       MaKi VARCHAR(21) PRIMARY KEY,
-                       Ki INT,
-                       MaKHHT VARCHAR(21),
-                       FOREIGN KEY (MaKHHT) REFERENCES KeHoachHocTap(MaKHHT)
+create table NhanVien
+(
+    MaNhanVien       varchar(21)  not null
+        primary key,
+    Email            varchar(100) null,
+    SoDienThoai      varchar(15)  null,
+    HoTen            varchar(100) null,
+    NgayThangNamSinh date         null,
+    GioiTinh         varchar(10)  null,
+    MaTaiKhoan       varchar(21)  null,
+    constraint NhanVien_ibfk_1
+        foreign key (MaTaiKhoan) references TaiKhoan (MaTaiKhoan)
 );
 
--- 21. KiHoc_MonHoc
-CREATE TABLE KiHoc_MonHoc (
-                              MaKi VARCHAR(21),
-                              MaMon VARCHAR(21),
-                              MaLoaiMH VARCHAR(21),
-                              PRIMARY KEY (MaKi, MaMon),
-                              FOREIGN KEY (MaKi) REFERENCES KiHoc(MaKi),
-                              FOREIGN KEY (MaMon) REFERENCES MonHoc(MaMon),
-                              FOREIGN KEY (MaLoaiMH) REFERENCES LoaiMonHoc(MaLoaiMH)
+create index MaTaiKhoan
+    on NhanVien (MaTaiKhoan);
+
+create table QuanTriVien
+(
+    MaQTV            varchar(21)  not null
+        primary key,
+    Email            varchar(100) null,
+    SoDienThoai      varchar(15)  null,
+    HoTen            varchar(100) null,
+    NgayThangNamSinh date         null,
+    GioiTinh         varchar(10)  null,
+    MaTaiKhoan       varchar(21)  null,
+    constraint QuanTriVien_ibfk_1
+        foreign key (MaTaiKhoan) references TaiKhoan (MaTaiKhoan)
 );
+
+create index MaTaiKhoan
+    on QuanTriVien (MaTaiKhoan);
+
+create index MaVaiTro
+    on TaiKhoan (MaVaiTro);
