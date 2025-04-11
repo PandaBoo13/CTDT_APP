@@ -19,7 +19,7 @@ public class NganhDaoTaoController {
     public ResponseEntity<ApiResponse> getAllNganhDaoTao() {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Lay danh sach nganh dao tao thanh cong")
+                .message("Lấy danh sách ngành đào tạo thành công")
                 .data(nganhDaoTaoService.getAllNganhDaoTao())
                 .build();
         return ResponseEntity.ok(response);
@@ -29,7 +29,7 @@ public class NganhDaoTaoController {
     public ResponseEntity<ApiResponse> createNganhDaoTao(@RequestBody NDTCreationRequest req) {
         ApiResponse response = ApiResponse.builder()
                 .code(201)
-                .message("Tao nganh dao tao thanh cong")
+                .message("Tạo ngành đào tạo thành công")
                 .data(nganhDaoTaoService.createNganhDaoTao(req))
                 .build();
         return ResponseEntity.ok(response);
@@ -41,7 +41,7 @@ public class NganhDaoTaoController {
     ) {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Cap nhat nganh dao tao thanh cong")
+                .message("Cập nhật ngành đào tạo thành công")
                 .data(nganhDaoTaoService.updateNganhDaoTao(maNganh, req))
                 .build();
         return ResponseEntity.ok(response);
@@ -52,7 +52,7 @@ public class NganhDaoTaoController {
         nganhDaoTaoService.deleteNganhDaoTao(maNganh);
         ApiResponse response = ApiResponse.builder()
                 .code(204)
-                .message("Xoa nganh dao tao thanh cong")
+                .message("Xóa ngành đào tạo thành công")
                 .build();
         return ResponseEntity.ok(response);
     }

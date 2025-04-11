@@ -1,76 +1,61 @@
 package com.example.CTDT_APP.controller;
 
-import com.example.CTDT_APP.dto.request.TaiKhoanCreationRequest;
-import com.example.CTDT_APP.dto.request.TaiKhoanUpdateRequest;
+import com.example.CTDT_APP.dto.request.TaiKhoanLoginRequest;
+import com.example.CTDT_APP.dto.request.TaiKhoanRegisterRequest;
 import com.example.CTDT_APP.dto.response.ApiResponse;
 import com.example.CTDT_APP.service.TaiKhoanService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@RestController
-@RequestMapping("taikhoans")
+@RestController("/api/v1/tai-khoan")
 @RequiredArgsConstructor
 public class TaiKhoanController {
     private final TaiKhoanService taiKhoanService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse> createTaiKhoan(@RequestBody TaiKhoanCreationRequest request) {
+    @PostMapping("/dang-ki")
+    public ResponseEntity<ApiResponse> dangKi(@RequestBody TaiKhoanRegisterRequest request) {
         ApiResponse response = ApiResponse.builder()
                 .code(201)
-                .message("Create TaiKhoan successful")
-                .data(taiKhoanService.createTaikhoan(request))
+                .message("Tạo tài khoản thành công")
+                .data(taiKhoanService.register(request))
                 .build();
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse> getTaikhoan() {
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+    @PostMapping("/dang-nhap")
+    public ResponseEntity<ApiResponse> dangNhap(@RequestBody TaiKhoanLoginRequest request) {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Get TaiKhoan successful")
-                .data(taiKhoanService.getTaiKhoan())
+                .message("Đăng nhập thành công")
+                .data(taiKhoanService.login(request))
                 .build();
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{mataikhoan}")
-    ResponseEntity<ApiResponse> getTaiKhoanById(@PathVariable("mataikhoan") String mataikhoan) {
+    @PostMapping("/tam-ngung/{maTaiKhoan}")
+    public ResponseEntity<ApiResponse> blockTaiKhoan(@RequestParam String maTaiKhoan) {
+        taiKhoanService.blockTaiKhoan(maTaiKhoan);
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Get TaiKhoan successful")
-                .data(taiKhoanService.getTaiKhoanById(mataikhoan))
+                .message("Khóa tài khoản thành công")
                 .build();
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{maTaiKhoan}")
-    ResponseEntity<ApiResponse> updateTaiKhoanById(
-            @PathVariable("maTaiKhoan") String maTaiKhoan,
-            @RequestBody TaiKhoanUpdateRequest request
-    ) {
+    @PostMapping("validate-token")
+    public ResponseEntity<ApiResponse> validateToken(@RequestParam String token) {
         ApiResponse response = ApiResponse.builder()
-                .code(202)
-                .message("Update TaiKhoan successful")
-                .data(taiKhoanService.updateTaiKhoan(maTaiKhoan, request))
+                .code(200)
+                .message("Kiểm tra token thành công")
+                .data(taiKhoanService.isValidToken(token))
                 .build();
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{maTaiKhoan}")
-    ResponseEntity<ApiResponse> deleteTaiKhoan(@PathVariable("maTaiKhoan") String maTaiKhoan) {
-        taiKhoanService.deleteTaiKhoan(maTaiKhoan);
-        ApiResponse response = ApiResponse.builder()
-                .code(202)
-                .message("Delete TaiKhoan successful")
-                .build();
-        return ResponseEntity.ok(response);
-    }
 }

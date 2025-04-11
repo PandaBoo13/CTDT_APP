@@ -19,7 +19,7 @@ public class KhoaController {
     public ResponseEntity<ApiResponse> getAllKhoa() {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Lay danh sach khoa thanh cong ssdsdsd dsdsds")
+                .message("Lấy danh sách khoa thành công")
                 .data(khoaService.getAllKhoa())
                 .build();
         return ResponseEntity.ok(response);
@@ -29,7 +29,7 @@ public class KhoaController {
     public ResponseEntity<ApiResponse> createKhoa(@RequestBody @Valid KhoaCreationRequest req) {
         ApiResponse response = ApiResponse.builder()
                 .code(201)
-                .message("Tao khoa thanh cong")
+                .message("Tạo khoa thành công")
                 .data(khoaService.createKhoa(req))
                 .build();
         return ResponseEntity.ok(response);
@@ -41,7 +41,7 @@ public class KhoaController {
     ) {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Khoa da duoc cap nhat")
+                .message("Cập nhật khoa thành công")
                 .data(khoaService.updateKhoa(maKhoa, req))
                 .build();
         return ResponseEntity.ok(response);
@@ -52,7 +52,7 @@ public class KhoaController {
         khoaService.deleteKhoa(maKhoa);
         ApiResponse response = ApiResponse.builder()
                 .code(204)
-                .message("Xoa khoa thanh cong")
+                .message("Xóa khoa thành công")
                 .build();
         return ResponseEntity.ok(response);
     }

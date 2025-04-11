@@ -22,13 +22,13 @@ public class KhoaService {
     }
 
     public Khoa createKhoa(KhoaCreationRequest req) {
-        if (khoaRepo.existsById(req.getMaKhoa())) throw new AppException("Khoa da ton tai");
+        if (khoaRepo.existsById(req.getMaKhoa())) throw new AppException("Khoa đã tồn tại");
         return khoaRepo.save(mapper.map(req, Khoa.class));
     }
 
     public Khoa updateKhoa(String maKhoa, KhoaUpdateRequest req) {
         Khoa khoa = khoaRepo.findById(maKhoa)
-                .orElseThrow(() -> new AppException("Khoa khong ton tai"));
+                .orElseThrow(() -> new AppException("Khoa không tồn tại"));
 
         mapper.map(req, khoa);
 
@@ -36,7 +36,7 @@ public class KhoaService {
     }
 
     public void deleteKhoa(String maKhoa) {
-        if (!khoaRepo.existsById(maKhoa)) throw new AppException("Khoa khong ton tai");
+        if (!khoaRepo.existsById(maKhoa)) throw new AppException("Khoa không tồn tại");
         khoaRepo.deleteById(maKhoa);
     }
 }

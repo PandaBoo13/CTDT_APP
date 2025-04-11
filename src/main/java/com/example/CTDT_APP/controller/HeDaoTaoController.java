@@ -18,7 +18,7 @@ public class HeDaoTaoController {
     public ResponseEntity<ApiResponse> getAllHeDaoTao() {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Lay danh sach he dao tao thanh cong")
+                .message("Lấy danh sách hệ đào tạo thành công")
                 .data(heDaoTaoService.getAllHeDaoTao())
                 .build();
         return ResponseEntity.ok(response);
@@ -28,7 +28,7 @@ public class HeDaoTaoController {
     public ResponseEntity<ApiResponse> createHeDaoTao(@RequestBody HeDaoTaoCreationRequest req) {
         ApiResponse response = ApiResponse.builder()
                 .code(201)
-                .message("Tao moi he dao tao thanh cong")
+                .message("Tạo hệ đào tạo thành công")
                 .data(heDaoTaoService.createHeDaoTao(req))
                 .build();
         return ResponseEntity.ok(response);
@@ -41,7 +41,7 @@ public class HeDaoTaoController {
     ) {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Cap nhat he dao tao thanh cong")
+                .message("Cập nhật hệ đào tạo thành công")
                 .data(heDaoTaoService.updateHeDaoTao(maHeDaoTao, req))
                 .build();
         return ResponseEntity.ok(response);
@@ -52,7 +52,7 @@ public class HeDaoTaoController {
         heDaoTaoService.deleteHeDaoTao(maHeDaoTao);
         ApiResponse response = ApiResponse.builder()
                 .code(202)
-                .message("Xoa he dao tao thanh cong")
+                .message("Xóa hệ đào tạo thành công")
                 .build();
         return ResponseEntity.ok(response);
     }

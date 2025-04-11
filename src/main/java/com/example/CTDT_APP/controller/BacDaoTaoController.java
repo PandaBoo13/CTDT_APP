@@ -18,7 +18,7 @@ public class BacDaoTaoController {
     public ResponseEntity<ApiResponse> getAllBacDaoTao() {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Lay danh sach bac dao tao thanh cong")
+                .message("Lấy danh sách bậc đào tạo thành công")
                 .data(bacDaoTaoService.getAllBacDaoTao())
                 .build();
         return ResponseEntity.ok(response);
@@ -28,7 +28,7 @@ public class BacDaoTaoController {
     public ResponseEntity<ApiResponse> createBacDaoTao(@RequestBody BacDaoTaoCreationRequest req) {
         ApiResponse response = ApiResponse.builder()
                 .code(201)
-                .message("Tao moi bac dao tao thanh cong")
+                .message("Tạo bậc đào tạo thành công")
                 .data(bacDaoTaoService.createBacDaoTao(req))
                 .build();
         return ResponseEntity.ok(response);
@@ -41,7 +41,7 @@ public class BacDaoTaoController {
     ) {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Cap nhat bac dao tao thanh cong")
+                .message("Cập nhật bậc đào tạo thành công")
                 .data(bacDaoTaoService.updateBacDaoTao(maBacDaoTao, req))
                 .build();
         return ResponseEntity.ok(response);
@@ -52,7 +52,7 @@ public class BacDaoTaoController {
         bacDaoTaoService.deleteBacDaoTao(maBacDaoTao);
         ApiResponse response = ApiResponse.builder()
                 .code(202)
-                .message("Xoa bac dao tao thanh cong")
+                .message("Xóa bậc đào tạo thành công")
                 .build();
         return ResponseEntity.ok(response);
     }

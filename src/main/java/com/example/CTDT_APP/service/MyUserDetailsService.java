@@ -16,6 +16,6 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return taiKhoanRepository.findByTenDangNhap(username)
-                .orElseThrow(() -> new AppException("User not found with username: " + username));
+                .orElseThrow(() -> new AppException("Không tim thấy người dùng: " + username));
     }
 }

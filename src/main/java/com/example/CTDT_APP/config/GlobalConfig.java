@@ -2,6 +2,8 @@ package com.example.CTDT_APP.config;
 
 import com.example.CTDT_APP.dto.response.ChuyenNganhReponse;
 import com.example.CTDT_APP.entity.ChuyenNganh;
+import com.example.CTDT_APP.entity.NhanVien;
+import com.example.CTDT_APP.entity.NhanVienResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
@@ -19,9 +21,10 @@ public class GlobalConfig {
                 .setSkipNullEnabled(true);
 
         modelMapper.typeMap(ChuyenNganh.class, ChuyenNganhReponse.class)
-                .addMappings(mapper -> {
-                    mapper.map(ChuyenNganh::getNganhDaoTao, ChuyenNganhReponse::setNganhDaoTao);
-                });
+                .addMappings(mapper -> mapper.map(ChuyenNganh::getNganhDaoTao, ChuyenNganhReponse::setNganhDaoTao));
+
+        modelMapper.typeMap(NhanVien.class, NhanVienResponse.class)
+                .addMappings(mapper -> mapper.map(NhanVien::getTaiKhoan, NhanVienResponse::setTrangThai));
 
         return modelMapper;
     }

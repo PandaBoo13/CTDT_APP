@@ -1,8 +1,6 @@
 package com.example.CTDT_APP.controller;
 
-import com.example.CTDT_APP.dto.request.KhoaCreationRequest;
 import com.example.CTDT_APP.dto.request.MonHocCreationRequest;
-import com.example.CTDT_APP.dto.request.MonHocUpdateRequest;
 import com.example.CTDT_APP.dto.response.ApiResponse;
 import com.example.CTDT_APP.service.MonHocService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,7 @@ public class MonHocController {
     public ResponseEntity<ApiResponse> getAllMonHoc() {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Lay danh sach mon hoc thanh cong")
+                .message("Lấy danh sách môn học thành công")
                 .data(monHocService.getAllMonHoc())
                 .build();
         return ResponseEntity.ok(response);
@@ -29,29 +27,9 @@ public class MonHocController {
     public ResponseEntity<ApiResponse> createMonHoc(@RequestBody MonHocCreationRequest req) {
         ApiResponse response = ApiResponse.builder()
                 .code(201)
-                .message("Tao mon hoc thanh cong")
+                .message("Tạo môn học thành công")
                 .data(monHocService.createMonHoc(req))
                 .build();
         return ResponseEntity.ok(response);
     }
-
-//    @PutMapping
-//    public ResponseEntity<ApiResponse> updateKhoa(@RequestBody MonHocUpdateRequest req) {
-//        ApiResponse response = ApiResponse.builder()
-//                .code(200)
-//                .message("Cap nhat mon hoc thanh cong")
-//                .data(monHocService.updateMonHoc(req.g)
-//                .build();
-//        return ResponseEntity.ok(response);
-//    }
-//
-//    @DeleteMapping("/{maMon}")
-//    public ResponseEntity<ApiResponse> deleteKhoa(@PathVariable String maMon) {
-//        monHocService.deleteMonHoc(maMon);
-//        ApiResponse response = ApiResponse.builder()
-//                .code(204)
-//                .message("Xoa mon hoc thanh cong")
-//                .build();
-//        return ResponseEntity.ok(response);
-//    }
 }

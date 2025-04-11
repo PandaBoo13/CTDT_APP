@@ -23,9 +23,7 @@ public class KhoiKienThucService {
 
     public KhoiKienThuc createKhoiKienThuc(KTTCreationRequest req) {
 
-        if (khoiKienThucRepo.existsById(req.getMaKhoi())) {
-            throw new AppException("Ma khoi kien thuc da ton tai");
-        }
+        if (khoiKienThucRepo.existsById(req.getMaKhoi())) throw new AppException("Mã khối kiến thức đã tồn tại");
 
         KhoiKienThuc khoiKienThuc = mapper.map(req, KhoiKienThuc.class);
 
@@ -34,7 +32,7 @@ public class KhoiKienThucService {
 
     public KhoiKienThuc updateKhoiKienThuc(String maKhoi, KTTCreationRequest req) {
         KhoiKienThuc khoiKienThuc = khoiKienThucRepo.findById(maKhoi)
-                .orElseThrow(() -> new RuntimeException("Khoi kien thuc khong ton tai"));
+                .orElseThrow(() -> new AppException("Khối kiến thức không tồn tại"));
 
         mapper.map(req, khoiKienThuc);
 
@@ -42,7 +40,7 @@ public class KhoiKienThucService {
     }
 
     public void deleteKhoiKienThuc(String maKhoi) {
-        if (!khoiKienThucRepo.existsById(maKhoi)) throw new RuntimeException("Khoi kien thuc khong ton tai");
+        if (!khoiKienThucRepo.existsById(maKhoi)) throw new AppException("Khối kiến thức không tồn tại");
         khoiKienThucRepo.deleteById(maKhoi);
     }
 }

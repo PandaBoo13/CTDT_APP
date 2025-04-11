@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AuthRequest {
+public class TaiKhoanLoginRequest {
     private String tenDangNhap;
     private String matKhau;
 }

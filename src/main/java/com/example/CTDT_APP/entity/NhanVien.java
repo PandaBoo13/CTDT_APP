@@ -1,9 +1,9 @@
 package com.example.CTDT_APP.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.example.CTDT_APP.constant.GioiTinh;
+import com.example.CTDT_APP.util.GenerateNanoID;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @Builder
 public class NhanVien {
     @Id
+    @GenerateNanoID
     @Column(name = "MaNhanVien")
     private String MaNhanVien;
     @Column(name = "Email")
@@ -26,6 +27,12 @@ public class NhanVien {
     private String hoTen;
     @Column(name = "NgayThangNamSinh")
     private LocalDate ngayThangNamSinh;
-    @Column(name = "MaTaiKhoan")
-    private String maTaikhoan;
+
+    @Column(name = "GioiTinh")
+    @Enumerated(EnumType.STRING)
+    private GioiTinh gioiTinh;
+
+    @OneToOne
+    @JoinColumn(name = "MaTaiKhoan")
+    private TaiKhoan taiKhoan;
 }

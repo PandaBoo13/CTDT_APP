@@ -5,8 +5,6 @@ import com.example.CTDT_APP.dto.request.MonHocUpdateRequest;
 import com.example.CTDT_APP.dto.response.MonHocResponse;
 import com.example.CTDT_APP.entity.KhoiKienThuc;
 import com.example.CTDT_APP.entity.MonHoc;
-import com.example.CTDT_APP.entity.QuanHeMonHoc;
-import com.example.CTDT_APP.entity.QuanHeMonHocId;
 import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.repository.KhoiKienThucRepository;
 import com.example.CTDT_APP.repository.MonHocRepository;
@@ -34,11 +32,11 @@ public class MonHocService {
 
     @Transactional
     public MonHocResponse createMonHoc(MonHocCreationRequest req) {
-        if (monHocRepo.existsById(req.getMaMon())) throw new AppException("Ma mon hoc da ton tai");
+        if (monHocRepo.existsById(req.getMaMon())) throw new AppException("Mã môn học đã tồn tại");
         MonHoc monHoc = mapper.map(req, MonHoc.class);
 
         KhoiKienThuc khoiKienThuc = khoiKienThucRepo.findById(req.getMaKhoi())
-                .orElseThrow(() -> new AppException("Khoi kien thuc khong ton tai"));
+                .orElseThrow(() -> new AppException("Khối kiến thức không tồn tại"));
 
         Optional
                 .ofNullable(req.getQuanHeMonHocs())
@@ -46,7 +44,6 @@ public class MonHocService {
                     monHocLienQuanService.createMonHocLienQuan(req.getMaMon(), quanHeMonHocRequests);
                 });
         monHoc.setKhoiKienThuc(khoiKienThuc);
-        log.info("Khoi kien thuc: {}", monHoc.getKhoiKienThuc().getMaKhoi());
 
         return mapper.map(
                 monHocRepo.save(monHoc), MonHocResponse.class
@@ -55,10 +52,10 @@ public class MonHocService {
 
     public MonHocResponse updateMonHoc(String maMonHoc, MonHocUpdateRequest req) {
         MonHoc monHoc = monHocRepo.findById(maMonHoc)
-                .orElseThrow(() -> new AppException("Mon hoc khong ton tai"));
+                .orElseThrow(() -> new AppException("Môn học không tồn tại"));
 
         KhoiKienThuc khoiKienThuc = khoiKienThucRepo.findById(req.getMaKhoi())
-                .orElseThrow(() -> new AppException("Khoi kien thuc khong ton tai"));
+                .orElseThrow(() -> new AppException("Khối kiến thức không tồn tại"));
 
         mapper.map(req, monHoc);
         monHoc.setKhoiKienThuc(khoiKienThuc);
@@ -69,7 +66,7 @@ public class MonHocService {
     }
 
     public void deleteMonHoc(String maMonHoc) {
-        if (!monHocRepo.existsById(maMonHoc)) throw new AppException("Mon hoc khong ton tai");
+        if (!monHocRepo.existsById(maMonHoc)) throw new AppException("Môn học không tồn tại");
         monHocRepo.deleteById(maMonHoc);
     }
 }

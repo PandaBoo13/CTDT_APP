@@ -17,7 +17,7 @@ public class KhoiKienThucController {
     public ResponseEntity<ApiResponse> getAllKhoiKienThuc() {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Lay danh sach khoi kien thuc thanh cong")
+                .message("Lấy danh sách khối kiến thức thành công")
                 .data(khoiKienThucService.getAllKhoiKienThuc())
                 .build();
         return ResponseEntity.ok(response);
@@ -27,7 +27,7 @@ public class KhoiKienThucController {
     public ResponseEntity<ApiResponse> createKhoiKienThuc(@RequestBody KTTCreationRequest req) {
         ApiResponse response = ApiResponse.builder()
                 .code(201)
-                .message("Tao khoi kien thuc thanh cong")
+                .message("Tạo khối kiến thức thành công")
                 .data(khoiKienThucService.createKhoiKienThuc(req))
                 .build();
         return ResponseEntity.ok(response);
@@ -39,7 +39,7 @@ public class KhoiKienThucController {
     ) {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Cap nhat khoi kien thuc thanh cong")
+                .message("Cập nhật khối kiến thức thành công")
                 .data(khoiKienThucService.updateKhoiKienThuc(maKhoi, req))
                 .build();
         return ResponseEntity.ok(response);
@@ -50,7 +50,7 @@ public class KhoiKienThucController {
         khoiKienThucService.deleteKhoiKienThuc(maKhoi);
         ApiResponse response = ApiResponse.builder()
                 .code(204)
-                .message("Xoa khoi kien thuc thanh cong")
+                .message("Xóa khối kiến thức thành công")
                 .build();
         return ResponseEntity.ok(response);
     }
