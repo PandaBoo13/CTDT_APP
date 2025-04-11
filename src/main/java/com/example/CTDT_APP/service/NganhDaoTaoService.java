@@ -21,10 +21,10 @@ public class NganhDaoTaoService {
     private final ModelMapper mapper;
 
     public NganhDaoTao createNganhDaoTao(NDTCreationRequest req) {
-        if (nganhDaoTaoRepo.existsById(req.getMaNganh())) throw new AppException("Nganh dao tao da ton tai");
+        if (nganhDaoTaoRepo.existsById(req.getMaNganh())) throw new AppException("Ngành đào tạo đã tồn tại");
 
         Khoa khoa = khoaRepo.findById(req.getMaKhoa())
-                .orElseThrow(() -> new AppException("Khoa khong ton tai"));
+                .orElseThrow(() -> new AppException("Khoa không tồn tại"));
 
         NganhDaoTao nganhDaoTao = mapper.map(req, NganhDaoTao.class);
         nganhDaoTao.setKhoa(khoa);
@@ -34,9 +34,9 @@ public class NganhDaoTaoService {
 
     public NganhDaoTao updateNganhDaoTao(String maNganhDaoTao, NDTUpdateRequest req) {
         NganhDaoTao nganhDaoTao = nganhDaoTaoRepo.findById(maNganhDaoTao)
-                .orElseThrow(() -> new AppException("Nganh dao tao khong ton tai"));
+                .orElseThrow(() -> new AppException("Ngành đào tạo không tồn tại"));
         Khoa khoa = khoaRepo.findById(req.getMaKhoa())
-                .orElseThrow(() -> new AppException("Khoa khong ton tai"));
+                .orElseThrow(() -> new AppException("Khoa không tồn tại"));
 
         mapper.map(req, nganhDaoTao);
         nganhDaoTao.setKhoa(khoa);
@@ -49,9 +49,7 @@ public class NganhDaoTaoService {
     }
 
     public void deleteNganhDaoTao(String maNganhDaoTao) {
-        if (!nganhDaoTaoRepo.existsById(maNganhDaoTao)) {
-            throw new AppException("Nganh dao tao khong ton tai");
-        }
+        if (!nganhDaoTaoRepo.existsById(maNganhDaoTao)) throw new AppException("Ngành đào tạo không tồn tại");
         nganhDaoTaoRepo.deleteById(maNganhDaoTao);
     }
 }

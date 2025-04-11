@@ -18,7 +18,7 @@ public class ChuyenNganhController {
     public ResponseEntity<ApiResponse> getAllChuyenNganh() {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Lay danh sach chuyen nganh thanh cong")
+                .message("Lấy danh sách chuyên ngành thành công")
                 .data(chuyenNganhService.getAllChuyenNganh())
                 .build();
         return ResponseEntity.ok(response);
@@ -28,7 +28,7 @@ public class ChuyenNganhController {
     public ResponseEntity<ApiResponse> createChuyenNganh(@RequestBody ChuyenNganhCreationRequest req) {
         ApiResponse response = ApiResponse.builder()
                 .code(201)
-                .message("Tao chuyen nganh thanh cong")
+                .message("Tạo chuyên ngành thành công")
                 .data(chuyenNganhService.createChuyenNganh(req))
                 .build();
         return ResponseEntity.ok(response);
@@ -38,7 +38,7 @@ public class ChuyenNganhController {
     public ResponseEntity<ApiResponse> updateChuyenNganh(@PathVariable String maChuyenNganh, @RequestBody ChuyenNganhUpdateRequest req) {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Cap nhat chuyen nganh thanh cong")
+                .message("Cập nhật chuyên ngành thành công")
                 .data(chuyenNganhService.updateChuyenNganh(maChuyenNganh, req))
                 .build();
         return ResponseEntity.ok(response);
@@ -49,7 +49,7 @@ public class ChuyenNganhController {
         chuyenNganhService.deleteChuyenNganh(maChuyenNganh);
         ApiResponse response = ApiResponse.builder()
                 .code(204)
-                .message("Xoa chuyen nganh thanh cong")
+                .message("Xóa chuyên ngành thành công")
                 .build();
         return ResponseEntity.ok(response);
     }

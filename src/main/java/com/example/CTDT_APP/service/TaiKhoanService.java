@@ -1,64 +1,84 @@
 package com.example.CTDT_APP.service;
 
-import com.example.CTDT_APP.dto.request.TaiKhoanCreationRequest;
-import com.example.CTDT_APP.dto.request.TaiKhoanUpdateRequest;
+import com.example.CTDT_APP.constant.TrangThai;
+import com.example.CTDT_APP.dto.request.TaiKhoanLoginRequest;
+import com.example.CTDT_APP.dto.request.TaiKhoanRegisterRequest;
+import com.example.CTDT_APP.dto.response.AuthRespone;
+import com.example.CTDT_APP.dto.response.TokenValidReponse;
+import com.example.CTDT_APP.entity.NhanVien;
 import com.example.CTDT_APP.entity.TaiKhoan;
 import com.example.CTDT_APP.exception.AppException;
-import com.example.CTDT_APP.mapper.TaiKhoanMapper;
 import com.example.CTDT_APP.repository.TaiKhoanRepository;
 import com.example.CTDT_APP.repository.VaiTroRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
+@RequiredArgsConstructor
 @Service
 public class TaiKhoanService {
-    @Autowired
-    private VaiTroRepository vaiTroRepository;
-    @Autowired
-    private TaiKhoanRepository taiKhoanRepository;
-    @Autowired
-    private TaiKhoanMapper taiKhoanMapper;
+    private final VaiTroRepository vaiTroRepository;
+    private final AuthenticationManager authManager;
+    private final TaiKhoanRepository taiKhoanRepo;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public TaiKhoan createTaikhoan(TaiKhoanCreationRequest request) {
-        TaiKhoan taiKhoan = taiKhoanMapper.toTaiKhoan(request);
-        if (taiKhoanRepository.existsByMaTaiKhoan(request.getMaTaiKhoan()))
-            throw new AppException("Tai khoan da ton tai");
-        if (taiKhoanRepository.existsByTenDangNhap(request.getTenDangNhap()))
-            throw new AppException("Ten dang nhap da ton tai");
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
+    @Transactional
+    public String register(TaiKhoanRegisterRequest req) {
+        if (taiKhoanRepo.existsByTenDangNhap(req.getTenDangNhap()))
+            throw new AppException("Tên đăng nhập đã tồn tại");
 
-        return taiKhoanRepository.save(taiKhoan);
+        NhanVien nhanVien = NhanVien.builder()
+                .hoTen(req.getHoVaTen())
+                .email(req.getEmail())
+                .soDienThoai(req.getSoDienThoai())
+                .ngayThangNamSinh(req.getNgayThangNamSinh())
+                .gioiTinh(req.getGioiTinh())
+                .build();
+
+        TaiKhoan taiKhoan = TaiKhoan.builder()
+                .tenDangNhap(req.getTenDangNhap())
+                .matKhau(passwordEncoder.encode(req.getMatKhau()))
+                .trangThai(req.getTrangThai())
+                .vaiTro(vaiTroRepository.findByTenVaiTro("ROLE_EMPLOYEE").orElseThrow(() -> new AppException("Vai trò không tồn tại")))
+                .nhanVien(nhanVien)
+                .build();
+
+        return taiKhoanRepo.save(taiKhoan).getMaTaiKhoan();
     }
 
-    @PreAuthorize("hasRole('QTV')")
-    public List<TaiKhoan> getTaiKhoan() {
-        return taiKhoanRepository.findAll();
+    public AuthRespone login(TaiKhoanLoginRequest req) {
+        TaiKhoan taiKhoan = taiKhoanRepo.findByTenDangNhap(req.getTenDangNhap())
+                .orElseThrow(() -> new AppException("Tên đăng nhập không tồn tại"));
+
+        if (!authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        req.getTenDangNhap(),
+                        req.getMatKhau()
+                )).isAuthenticated()) {
+            throw new AppException("Sai mật khẩu");
+        }
+
+        return AuthRespone.builder()
+                .token(jwtService.generateToken(req.getTenDangNhap()))
+                .role(taiKhoan.getVaiTro().getTenVaiTro())
+                .build();
     }
 
-    @PostAuthorize("returnObject.tenDangNhap==authentication.name")
-    public TaiKhoan getTaiKhoanById(String id) {
-        return taiKhoanRepository.findById(id)
-                .orElseThrow(() -> new AppException("Tai khoan khong ton tai"));
+    public void blockTaiKhoan(String maTaiKhoan) {
+        TaiKhoan taiKhoan = taiKhoanRepo.findById(maTaiKhoan)
+                .orElseThrow(() -> new AppException("Tài khoản không tồn tại"));
+        taiKhoan.setTrangThai(TrangThai.INACTIVE);
+        taiKhoanRepo.save(taiKhoan);
     }
 
-    @PreAuthorize("hasRole('QTV')")
-    public TaiKhoan updateTaiKhoan(String maTaiKhoan, TaiKhoanUpdateRequest request) {
-        TaiKhoan taiKhoan = getTaiKhoanById(maTaiKhoan);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
-        return taiKhoanRepository.save(taiKhoan);
+    public TokenValidReponse isValidToken(@RequestParam String token) {
+        return TokenValidReponse.builder()
+                .isValidToken(jwtService.isTokenExpired(token))
+                .build();
     }
-    @PreAuthorize("hasRole('QTV')")
-    public void deleteTaiKhoan(String maTaiKhoan) {
-        taiKhoanRepository.deleteById(maTaiKhoan);
-    }
-
-
 }

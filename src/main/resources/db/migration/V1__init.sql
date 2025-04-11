@@ -231,11 +231,12 @@ create index MaQuyen
 
 create table TaiKhoan
 (
-    MaTaiKhoan  varchar(21)  not null
+    MaTaiKhoan  varchar(21)                                  not null
         primary key,
-    TenDangNhap varchar(50)  null,
-    MatKhau     varchar(255) null,
-    MaVaiTro    varchar(21)  null,
+    TenDangNhap varchar(50)                                  null,
+    MatKhau     varchar(255)                                 null,
+    MaVaiTro    varchar(21)                                  null,
+    TrangThai   enum ('ACTIVE', 'INACTIVE') default 'ACTIVE' null,
     constraint TenDangNhap
         unique (TenDangNhap),
     constraint TaiKhoan_ibfk_1
@@ -278,3 +279,4 @@ create index MaTaiKhoan
 
 create index MaVaiTro
     on TaiKhoan (MaVaiTro);
+

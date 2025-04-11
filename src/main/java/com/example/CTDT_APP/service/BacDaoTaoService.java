@@ -23,7 +23,7 @@ public class BacDaoTaoService {
 
     public BacDaoTao createBacDaoTao(BacDaoTaoCreationRequest req) {
         if (bacDaoTaoRepository.existsById(req.getMaBac())) {
-            throw new AppException("BacDaoTao already exists");
+            throw new AppException("Mã bậc đào tạo đã tồn tại");
         }
 
         return bacDaoTaoRepository.save(mapper.map(req, BacDaoTao.class));
@@ -31,7 +31,7 @@ public class BacDaoTaoService {
 
     public BacDaoTao updateBacDaoTao(String maBacDaoTao, BacDaoTaoUpdateRequest req) {
         BacDaoTao bacDaoTao = bacDaoTaoRepository.findById(maBacDaoTao)
-                .orElseThrow(() -> new AppException("BacDaoTao not found"));
+                .orElseThrow(() -> new AppException("Không tìm thấy bậc đào tạo"));
 
         mapper.map(req, bacDaoTao);
 
@@ -40,7 +40,7 @@ public class BacDaoTaoService {
 
     public void deleteBacDaoTao(String maBacDaoTao) {
         if (!bacDaoTaoRepository.existsById(maBacDaoTao)) {
-            throw new AppException("BacDaoTao not found");
+            throw new AppException("Không tìm thấy bậc đào tạo");
         }
         bacDaoTaoRepository.deleteById(maBacDaoTao);
     }

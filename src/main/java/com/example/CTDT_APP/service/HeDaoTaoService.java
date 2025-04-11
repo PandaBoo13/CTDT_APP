@@ -23,14 +23,14 @@ public class HeDaoTaoService {
 
     public HeDaoTao createHeDaoTao(HeDaoTaoCreationRequest req) {
         if (heDaoTaoRepository.existsById(req.getMaHe())) {
-            throw new AppException("He dao tao da ton tai");
+            throw new AppException("Mã hệ đào tạo đã tồn tại");
         }
         return heDaoTaoRepository.save(mapper.map(req, HeDaoTao.class));
     }
 
     public HeDaoTao updateHeDaoTao(String maHeDaoTao, HeDaoTaoUpdateRequest req) {
         HeDaoTao heDaoTao = heDaoTaoRepository.findById(maHeDaoTao)
-                .orElseThrow(() -> new AppException("Khong tim thay he dao tao"));
+                .orElseThrow(() -> new AppException("Không tìm thấy hệ đào tạo"));
 
         mapper.map(req, heDaoTao);
 
@@ -39,7 +39,7 @@ public class HeDaoTaoService {
 
     public void deleteHeDaoTao(String maHeDaoTao) {
         if (!heDaoTaoRepository.existsById(maHeDaoTao)) {
-            throw new AppException("Khong tim thay he dao tao");
+            throw new AppException("Không tìm thấy hệ đào tạo");
         }
         heDaoTaoRepository.deleteById(maHeDaoTao);
     }

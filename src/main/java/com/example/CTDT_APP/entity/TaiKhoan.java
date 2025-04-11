@@ -1,5 +1,6 @@
 package com.example.CTDT_APP.entity;
 
+import com.example.CTDT_APP.constant.TrangThai;
 import com.example.CTDT_APP.util.GenerateNanoID;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,9 +32,16 @@ public class TaiKhoan implements UserDetails {
     @JoinColumn(name = "MaVaiTro")
     private VaiTro vaiTro;
 
+    @Column(name = "TrangThai")
+    @Enumerated(EnumType.STRING)
+    private TrangThai trangThai;
+
+    @OneToOne(mappedBy = "taiKhoan")
+    private NhanVien nhanVien;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(vaiTro.getMaVaiTro()));
+        return List.of(new SimpleGrantedAuthority(vaiTro.getTenVaiTro()));
     }
 
     @Override
@@ -44,5 +52,11 @@ public class TaiKhoan implements UserDetails {
     @Override
     public String getUsername() {
         return tenDangNhap;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        System.out.print("TrangThai: " + trangThai);
+        return trangThai.name().equals("ACTIVE");
     }
 }

@@ -30,12 +30,10 @@ public class ChuyenNganhService {
     }
 
     public ChuyenNganhReponse createChuyenNganh(ChuyenNganhCreationRequest req) {
-        if (chuyenNganhRepo.existsById(req.getMaChuyenNganh())) {
-            throw new AppException("Chuyen nganh da ton tai");
-        }
+        if (chuyenNganhRepo.existsById(req.getMaChuyenNganh())) throw new AppException("Chuyên ngành đã tồn tại");
 
         NganhDaoTao nganhDaoTao = nganhDaoTaoRepository.findById(req.getMaNganh())
-                .orElseThrow(() -> new AppException("Khong tim thay nganh dao tao"));
+                .orElseThrow(() -> new AppException("Không tìm thấy ngành đào tạo"));
 
         ChuyenNganh chuyenNganh = mapper.map(req, ChuyenNganh.class);
         chuyenNganh.setNganhDaoTao(nganhDaoTao);
@@ -45,10 +43,10 @@ public class ChuyenNganhService {
 
     public ChuyenNganhReponse updateChuyenNganh(String maChuyenNganh, ChuyenNganhUpdateRequest req) {
         NganhDaoTao nganhDaoTao = nganhDaoTaoRepository.findById(req.getMaNganh())
-                .orElseThrow(() -> new AppException("Khong tim thay nganh dao tao"));
+                .orElseThrow(() -> new AppException("Không tìm thấy ngành đào tạo"));
 
         ChuyenNganh chuyenNganh = chuyenNganhRepo.findById(maChuyenNganh)
-                .orElseThrow(() -> new AppException("Khong tim thay chuyen nganh"));
+                .orElseThrow(() -> new AppException("Không tìm thấy chuyên ngành"));
 
         mapper.map(req, chuyenNganh);
         chuyenNganh.setNganhDaoTao(nganhDaoTao);
@@ -57,9 +55,7 @@ public class ChuyenNganhService {
     }
 
     public void deleteChuyenNganh(String maChuyenNganh) {
-        if (!chuyenNganhRepo.existsById(maChuyenNganh)) {
-            throw new AppException("Khong tim thay chuyen nganh");
-        }
+        if (!chuyenNganhRepo.existsById(maChuyenNganh)) throw new AppException("Không tìm thấy chuyên ngành");
         chuyenNganhRepo.deleteById(maChuyenNganh);
     }
 }
