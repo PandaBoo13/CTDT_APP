@@ -1,13 +1,10 @@
 package com.example.CTDT_APP.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -21,12 +18,15 @@ public class KiHoc {
     @Column(name = "Ki")
     private Integer ki;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "MaKHHT")
     private KeHoachHocTap keHoachHocTap;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "maKi", fetch = FetchType.LAZY)
-    private List<KihocMonhoc> kihocMonhocs;
+    @ManyToMany
+    @JoinTable(
+            name = "KiHoc_MonHoc",
+            joinColumns = @JoinColumn(name = "MaKi"),
+            inverseJoinColumns = @JoinColumn(name = "MaMon")
+    )
+    private Set<MonHoc> monHocs = new HashSet<>();
 }

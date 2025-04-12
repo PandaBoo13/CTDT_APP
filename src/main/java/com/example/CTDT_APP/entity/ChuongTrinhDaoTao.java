@@ -42,6 +42,6 @@ public class ChuongTrinhDaoTao {
     @JoinColumn(name = "MaNganh")
     private NganhDaoTao maNganh;
 
-    @OneToMany(mappedBy = "maCTDT", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "chuongTrinhDaoTao", fetch = FetchType.LAZY)
     private List<KeHoachHocTap> keHoachHocTaps;
 }

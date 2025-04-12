@@ -1,22 +1,44 @@
 package com.example.CTDT_APP.exception;
 
 import com.example.CTDT_APP.dto.response.ErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(value = AppException.class)
+    @ExceptionHandler({AppException.class})
     ResponseEntity<ErrorResponse> handlingRuntimeException(AppException exception) {
         ErrorResponse response = ErrorResponse.builder()
                 .code(400)
                 .message(exception.getMessage())
                 .build();
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+        ErrorResponse response = ErrorResponse.builder()
+                .code(401)
+                .message("Mật khẩu không đúng")
+                .build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
+        ErrorResponse apiResponse = ErrorResponse.builder()
+                .code(403)
+                .message("Bạn không có quyền truy cập tài nguyên này")
+                .build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiResponse);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

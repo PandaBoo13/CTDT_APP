@@ -56,7 +56,6 @@ public class TaiKhoan implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        System.out.print("TrangThai: " + trangThai);
-        return trangThai.name().equals("ACTIVE");
+        return trangThai.name().equals(TrangThai.HOAT_DONG.name());
     }
 }

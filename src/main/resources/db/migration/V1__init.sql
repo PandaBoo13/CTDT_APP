@@ -27,29 +27,25 @@ create table KhoiKienThuc
     MaKhoi  varchar(21)  not null
         primary key,
     TenKhoi varchar(100) null,
-    MoTa    text         null
-);
-
-create table LoaiMonHoc
-(
-    MaLoaiMH varchar(21)  not null
-        primary key,
-    TenLoai  varchar(100) null
+    MoTa    text         null,
+    Parent  varchar(21)  null,
+    constraint fk_parent
+        foreign key (Parent) references KhoiKienThuc (MaKhoi)
 );
 
 create table MonHoc
 (
-    MaMon           varchar(21)  not null
+    MaMon           varchar(21)                                               not null
         primary key,
-    TenMon          varchar(100) null,
-    SoTinChi        int          null,
-    SoTietLyThuyet  int          null,
-    SoTietBaiTap    int          null,
-    SoTietThucHanh  int          null,
-    SoTietTuHoc     int          null,
-    NgonNguGiangDay varchar(21)  null,
-    TrangThai       varchar(21)  null,
-    MaKhoi          varchar(21)  null,
+    TenMon          varchar(100)                                              null,
+    SoTinChi        int                                                       null,
+    SoTietLyThuyet  int                                                       null,
+    SoTietBaiTap    int                                                       null,
+    SoTietThucHanh  int                                                       null,
+    SoTietTuHoc     int                                                       null,
+    MaKhoi          varchar(21)                                               null,
+    TrangThai       enum ('HOAT_DONG', 'NGUNG_HOAT_DONG') default 'HOAT_DONG' not null,
+    NgonNguGiangDay enum ('TIENG_VIET', 'TIENG_ANH')                          not null,
     constraint MonHoc_ibfk_1
         foreign key (MaKhoi) references KhoiKienThuc (MaKhoi)
 );
@@ -77,14 +73,14 @@ create table NganhDaoTao
 
 create table ChuongTrinhDaoTao
 (
-    MaCTDT    varchar(21)  not null
+    MaCTDT    varchar(21)                                               not null
         primary key,
-    TenCTDT   varchar(100) null,
-    MoTa      text         null,
-    TrangThai varchar(21)  null,
-    CapBac    varchar(21)  null,
-    MaHe      varchar(21)  null,
-    MaNganh   varchar(21)  null,
+    TenCTDT   varchar(100)                                              null,
+    MoTa      text                                                      null,
+    CapBac    varchar(21)                                               null,
+    MaHe      varchar(21)                                               null,
+    MaNganh   varchar(21)                                               null,
+    TrangThai enum ('HOAT_DONG', 'NGUNG_HOAT_DONG') default 'HOAT_DONG' not null,
     constraint ChuongTrinhDaoTao_ibfk_1
         foreign key (CapBac) references BacDaoTao (MaBac),
     constraint ChuongTrinhDaoTao_ibfk_2
@@ -150,20 +146,14 @@ create index MaKHHT
 
 create table KiHoc_MonHoc
 (
-    MaKi     varchar(21) not null,
-    MaMon    varchar(21) not null,
-    MaLoaiMH varchar(21) null,
+    MaKi  varchar(21) not null,
+    MaMon varchar(21) not null,
     primary key (MaKi, MaMon),
     constraint KiHoc_MonHoc_ibfk_1
         foreign key (MaKi) references KiHoc (MaKi),
     constraint KiHoc_MonHoc_ibfk_2
-        foreign key (MaMon) references MonHoc (MaMon),
-    constraint KiHoc_MonHoc_ibfk_3
-        foreign key (MaLoaiMH) references LoaiMonHoc (MaLoaiMH)
+        foreign key (MaMon) references MonHoc (MaMon)
 );
-
-create index MaLoaiMH
-    on KiHoc_MonHoc (MaLoaiMH);
 
 create index MaMon
     on KiHoc_MonHoc (MaMon);
@@ -187,9 +177,9 @@ create index MaKhoa
 
 create table QuanHeMonHoc
 (
-    MaMonChinh    varchar(21) not null,
-    MaMonLienQuan varchar(21) not null,
-    LoaiDieuKien  varchar(21) null,
+    MaMonChinh    varchar(21)                                   not null,
+    MaMonLienQuan varchar(21)                                   not null,
+    LoaiDieuKien  enum ('TIEN_QUYET', 'SONG_HANH', 'HOC_TRUOC') null,
     primary key (MaMonChinh, MaMonLienQuan),
     constraint QuanHeMonHoc_ibfk_1
         foreign key (MaMonChinh) references MonHoc (MaMon),
@@ -231,12 +221,12 @@ create index MaQuyen
 
 create table TaiKhoan
 (
-    MaTaiKhoan  varchar(21)                                  not null
+    MaTaiKhoan  varchar(21)                                               not null
         primary key,
-    TenDangNhap varchar(50)                                  null,
-    MatKhau     varchar(255)                                 null,
-    MaVaiTro    varchar(21)                                  null,
-    TrangThai   enum ('ACTIVE', 'INACTIVE') default 'ACTIVE' null,
+    TenDangNhap varchar(50)                                               null,
+    MatKhau     varchar(255)                                              null,
+    MaVaiTro    varchar(21)                                               null,
+    TrangThai   enum ('HOAT_DONG', 'NGUNG_HOAT_DONG') default 'HOAT_DONG' not null,
     constraint TenDangNhap
         unique (TenDangNhap),
     constraint TaiKhoan_ibfk_1
@@ -245,14 +235,14 @@ create table TaiKhoan
 
 create table NhanVien
 (
-    MaNhanVien       varchar(21)  not null
+    MaNhanVien       varchar(21)        not null
         primary key,
-    Email            varchar(100) null,
-    SoDienThoai      varchar(15)  null,
-    HoTen            varchar(100) null,
-    NgayThangNamSinh date         null,
-    GioiTinh         varchar(10)  null,
-    MaTaiKhoan       varchar(21)  null,
+    Email            varchar(100)       null,
+    SoDienThoai      varchar(15)        null,
+    HoTen            varchar(100)       null,
+    NgayThangNamSinh date               null,
+    MaTaiKhoan       varchar(21)        null,
+    GioiTinh         enum ('NAM', 'NU') not null,
     constraint NhanVien_ibfk_1
         foreign key (MaTaiKhoan) references TaiKhoan (MaTaiKhoan)
 );
@@ -262,14 +252,14 @@ create index MaTaiKhoan
 
 create table QuanTriVien
 (
-    MaQTV            varchar(21)  not null
+    MaQTV            varchar(21)        not null
         primary key,
-    Email            varchar(100) null,
-    SoDienThoai      varchar(15)  null,
-    HoTen            varchar(100) null,
-    NgayThangNamSinh date         null,
-    GioiTinh         varchar(10)  null,
-    MaTaiKhoan       varchar(21)  null,
+    Email            varchar(100)       null,
+    SoDienThoai      varchar(15)        null,
+    HoTen            varchar(100)       null,
+    NgayThangNamSinh date               null,
+    MaTaiKhoan       varchar(21)        null,
+    GioiTinh         enum ('NAM', 'NU') not null,
     constraint QuanTriVien_ibfk_1
         foreign key (MaTaiKhoan) references TaiKhoan (MaTaiKhoan)
 );

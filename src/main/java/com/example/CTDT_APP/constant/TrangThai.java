@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum TrangThai {
-    ACTIVE("Hoạt động"), INACTIVE("Ngừng hoạt động");
+    HOAT_DONG("Hoạt động"), NGUNG_HOAT_DONG("Ngừng hoạt động");
 
     private final String value;
 
