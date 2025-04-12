@@ -11,7 +11,9 @@ import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.repository.TaiKhoanRepository;
 import com.example.CTDT_APP.repository.VaiTroRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class TaiKhoanService {
     private final VaiTroRepository vaiTroRepository;
     private final AuthenticationManager authManager;
@@ -29,8 +32,7 @@ public class TaiKhoanService {
 
     @Transactional
     public String register(TaiKhoanRegisterRequest req) {
-        if (taiKhoanRepo.existsByTenDangNhap(req.getTenDangNhap()))
-            throw new AppException("Tên đăng nhập đã tồn tại");
+        if (taiKhoanRepo.existsByTenDangNhap(req.getTenDangNhap())) throw new AppException("Tên đăng nhập đã tồn tại");
 
         NhanVien nhanVien = NhanVien.builder()
                 .hoTen(req.getHoVaTen())
@@ -55,13 +57,13 @@ public class TaiKhoanService {
         TaiKhoan taiKhoan = taiKhoanRepo.findByTenDangNhap(req.getTenDangNhap())
                 .orElseThrow(() -> new AppException("Tên đăng nhập không tồn tại"));
 
-        if (!authManager.authenticate(
+        log.info("Paa: {}", passwordEncoder.encode("123456"));
+
+        authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         req.getTenDangNhap(),
                         req.getMatKhau()
-                )).isAuthenticated()) {
-            throw new AppException("Sai mật khẩu");
-        }
+                ));
 
         return AuthRespone.builder()
                 .token(jwtService.generateToken(req.getTenDangNhap()))
@@ -72,7 +74,14 @@ public class TaiKhoanService {
     public void blockTaiKhoan(String maTaiKhoan) {
         TaiKhoan taiKhoan = taiKhoanRepo.findById(maTaiKhoan)
                 .orElseThrow(() -> new AppException("Tài khoản không tồn tại"));
-        taiKhoan.setTrangThai(TrangThai.INACTIVE);
+        taiKhoan.setTrangThai(TrangThai.NGUNG_HOAT_DONG);
+        taiKhoanRepo.save(taiKhoan);
+    }
+
+    public void activeTaiKhoan(String maTaiKhoan) {
+        TaiKhoan taiKhoan = taiKhoanRepo.findById(maTaiKhoan)
+                .orElseThrow(() -> new AppException("Tài khoản không tồn tại"));
+        taiKhoan.setTrangThai(TrangThai.HOAT_DONG);
         taiKhoanRepo.save(taiKhoan);
     }
 

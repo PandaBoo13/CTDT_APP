@@ -30,6 +30,6 @@ public class ChuyenNganh {
     private LocalDate ngayTao;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "maChuyenNganh", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "chuyenNganh", fetch = FetchType.LAZY)
     private List<KeHoachHocTap> keHoachHocTaps;
 }

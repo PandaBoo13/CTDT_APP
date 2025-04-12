@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum GioiTinh {
-    MALE("Nam"), FEMALE("Nữ");
+    NAM("Nam"), NU("Nữ");
 
     private final String value;
 
