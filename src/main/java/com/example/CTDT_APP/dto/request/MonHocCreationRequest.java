@@ -24,5 +24,5 @@ public class MonHocCreationRequest {
     private NgonNgu ngonNguGiangDay;
     @NotBlank(message = "Mã khối không được để trống")
     private String maKhoi;
-    private List<QuanHeMonHocRequest> quanHeMonHocs;
+    private List<QuanHeMonHocRequest> quanHeMonHoc;
 }

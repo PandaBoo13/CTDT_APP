@@ -1,6 +1,6 @@
 package com.example.CTDT_APP.service;
 
-import com.example.CTDT_APP.dto.request.KTTCreationRequest;
+import com.example.CTDT_APP.dto.request.KhoiKienThucCreationRequest;
 import com.example.CTDT_APP.dto.response.KhoiKienThucResponse;
 import com.example.CTDT_APP.entity.KhoiKienThuc;
 import com.example.CTDT_APP.exception.AppException;
@@ -30,7 +30,7 @@ public class KhoiKienThucService {
     }
 
     @Transactional
-    public KhoiKienThuc createKhoiKienThuc(KTTCreationRequest req) {
+    public KhoiKienThuc createKhoiKienThuc(KhoiKienThucCreationRequest req) {
         if (khoiKienThucRepo.existsById(req.getMaKhoi())) throw new AppException("Mã khối kiến thức đã tồn tại");
 
         KhoiKienThuc khoi = mapper.map(req, KhoiKienThuc.class);
@@ -46,7 +46,7 @@ public class KhoiKienThucService {
         return khoiKienThucRepo.save(khoi);
     }
 
-    public KhoiKienThuc updateKhoiKienThuc(String maKhoi, KTTCreationRequest req) {
+    public KhoiKienThuc updateKhoiKienThuc(String maKhoi, KhoiKienThucCreationRequest req) {
         KhoiKienThuc khoi = khoiKienThucRepo.findById(maKhoi)
                 .orElseThrow(() -> new AppException("Khối kiến thức không tồn tại"));
 

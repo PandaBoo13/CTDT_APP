@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class QuanHeMonHocRequest {
     @NotBlank(message = "Mã môn học liên quan không được để trống")
-    private String maMon;
+    private String maMonLienQuan;
     @NotBlank(message = "Điều kiện môn học không được để trống")
     private DieuKienMonHoc dieuKien;
 }

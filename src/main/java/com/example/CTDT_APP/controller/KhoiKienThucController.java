@@ -1,6 +1,6 @@
 package com.example.CTDT_APP.controller;
 
-import com.example.CTDT_APP.dto.request.KTTCreationRequest;
+import com.example.CTDT_APP.dto.request.KhoiKienThucCreationRequest;
 import com.example.CTDT_APP.dto.response.ApiResponse;
 import com.example.CTDT_APP.service.KhoiKienThucService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class KhoiKienThucController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createKhoiKienThuc(@RequestBody KTTCreationRequest req) {
+    public ResponseEntity<ApiResponse> createKhoiKienThuc(@RequestBody KhoiKienThucCreationRequest req) {
         ApiResponse response = ApiResponse.builder()
                 .code(201)
                 .message("Tạo khối kiến thức thành công")
@@ -35,7 +35,7 @@ public class KhoiKienThucController {
 
     @PutMapping("/{maKhoi}")
     public ResponseEntity<ApiResponse> updateKhoiKienThuc(
-            @PathVariable String maKhoi, @RequestBody KTTCreationRequest req
+            @PathVariable String maKhoi, @RequestBody KhoiKienThucCreationRequest req
     ) {
         ApiResponse response = ApiResponse.builder()
                 .code(200)

@@ -13,7 +13,6 @@ import com.example.CTDT_APP.repository.VaiTroRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,21 +33,24 @@ public class TaiKhoanService {
     public String register(TaiKhoanRegisterRequest req) {
         if (taiKhoanRepo.existsByTenDangNhap(req.getTenDangNhap())) throw new AppException("Tên đăng nhập đã tồn tại");
 
+        TaiKhoan taiKhoan = TaiKhoan.builder()
+                .tenDangNhap(req.getTenDangNhap())
+                .matKhau(passwordEncoder.encode(req.getMatKhau()))
+                .trangThai(req.getTrangThai())
+                .vaiTro(vaiTroRepository.findByTenVaiTro("ROLE_EMPLOYEE").orElseThrow(() -> new AppException("Vai trò không tồn tại")))
+                .trangThai(req.getTrangThai() == null ? TrangThai.HOAT_DONG : req.getTrangThai())
+                .build();
+
         NhanVien nhanVien = NhanVien.builder()
                 .hoTen(req.getHoVaTen())
                 .email(req.getEmail())
                 .soDienThoai(req.getSoDienThoai())
                 .ngayThangNamSinh(req.getNgayThangNamSinh())
                 .gioiTinh(req.getGioiTinh())
+                .taiKhoan(taiKhoan)
                 .build();
 
-        TaiKhoan taiKhoan = TaiKhoan.builder()
-                .tenDangNhap(req.getTenDangNhap())
-                .matKhau(passwordEncoder.encode(req.getMatKhau()))
-                .trangThai(req.getTrangThai())
-                .vaiTro(vaiTroRepository.findByTenVaiTro("ROLE_EMPLOYEE").orElseThrow(() -> new AppException("Vai trò không tồn tại")))
-                .nhanVien(nhanVien)
-                .build();
+        taiKhoan.setNhanVien(nhanVien);
 
         return taiKhoanRepo.save(taiKhoan).getMaTaiKhoan();
     }

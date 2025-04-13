@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class NDTUpdateRequest {
+public class NganhDaoTaoUpdateRequest {
     @NotBlank(message = "Tên ngành đào tạo (Tiếng Việt) không được để trống")
     private String tenNganhTV;
     @NotBlank(message = "Tên ngành đào tạo (Tiếng Anh) không được để trống")

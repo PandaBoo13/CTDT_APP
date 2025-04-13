@@ -1,7 +1,7 @@
 package com.example.CTDT_APP.service;
 
-import com.example.CTDT_APP.dto.request.NDTCreationRequest;
-import com.example.CTDT_APP.dto.request.NDTUpdateRequest;
+import com.example.CTDT_APP.dto.request.NganhDaoTaoCreationRequest;
+import com.example.CTDT_APP.dto.request.NganhDaoTaoUpdateRequest;
 import com.example.CTDT_APP.entity.Khoa;
 import com.example.CTDT_APP.entity.NganhDaoTao;
 import com.example.CTDT_APP.exception.AppException;
@@ -20,7 +20,7 @@ public class NganhDaoTaoService {
     private final KhoaRepository khoaRepo;
     private final ModelMapper mapper;
 
-    public NganhDaoTao createNganhDaoTao(NDTCreationRequest req) {
+    public NganhDaoTao createNganhDaoTao(NganhDaoTaoCreationRequest req) {
         if (nganhDaoTaoRepo.existsById(req.getMaNganh())) throw new AppException("Ngành đào tạo đã tồn tại");
 
         Khoa khoa = khoaRepo.findById(req.getMaKhoa())
@@ -32,7 +32,7 @@ public class NganhDaoTaoService {
         return nganhDaoTaoRepo.save(nganhDaoTao);
     }
 
-    public NganhDaoTao updateNganhDaoTao(String maNganhDaoTao, NDTUpdateRequest req) {
+    public NganhDaoTao updateNganhDaoTao(String maNganhDaoTao, NganhDaoTaoUpdateRequest req) {
         NganhDaoTao nganhDaoTao = nganhDaoTaoRepo.findById(maNganhDaoTao)
                 .orElseThrow(() -> new AppException("Ngành đào tạo không tồn tại"));
         Khoa khoa = khoaRepo.findById(req.getMaKhoa())

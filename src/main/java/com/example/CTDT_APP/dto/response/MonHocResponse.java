@@ -2,10 +2,13 @@ package com.example.CTDT_APP.dto.response;
 
 import com.example.CTDT_APP.constant.NgonNgu;
 import com.example.CTDT_APP.constant.TrangThai;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import com.example.CTDT_APP.entity.KhoiKienThuc;
+import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
+@Builder
 @Data
 public class MonHocResponse {
     private String maMon;
@@ -15,7 +18,8 @@ public class MonHocResponse {
     private int soTietBaiTap;
     private int soTietThucHanh;
     private int soTietTuHoc;
-    private NgonNgu ngonNguGiangDay;
-    private String maKhoi;
-    private TrangThai trangThai;
+    private String ngonNguGiangDay;
+    private String trangThai;
+    private KhoiKienThuc khoiKienThuc;
+    private List<QuanHeMonHocResponse> quanHeMonHoc;
 }

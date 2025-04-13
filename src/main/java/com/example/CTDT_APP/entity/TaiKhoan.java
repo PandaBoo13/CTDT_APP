@@ -36,7 +36,7 @@ public class TaiKhoan implements UserDetails {
     @Enumerated(EnumType.STRING)
     private TrangThai trangThai;
 
-    @OneToOne(mappedBy = "taiKhoan")
+    @OneToOne(mappedBy = "taiKhoan", cascade = CascadeType.ALL)
     private NhanVien nhanVien;
 
     @Override
