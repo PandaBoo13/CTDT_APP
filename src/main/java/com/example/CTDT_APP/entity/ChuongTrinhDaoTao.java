@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,18 +31,27 @@ public class ChuongTrinhDaoTao {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CapBac")
-    private BacDaoTao capBac;
+    private BacDaoTao bacDaoTao;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaHe")
-    private HeDaoTao maHe;
+    private HeDaoTao heDaoTao;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaNganh")
-    private NganhDaoTao maNganh;
+    private NganhDaoTao nganhDaoTao;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "chuongTrinhDaoTao", fetch = FetchType.LAZY)
     private List<KeHoachHocTap> keHoachHocTaps;
+
+    @ManyToMany
+    @JoinTable(
+            name = "Nam_CTDT",
+            joinColumns = @JoinColumn(name = "MaCTDT"),
+            inverseJoinColumns = @JoinColumn(name = "Nam")
+    )
+    private Set<NamDaoTao> namDaoTaos;
 }

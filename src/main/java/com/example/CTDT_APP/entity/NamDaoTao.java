@@ -5,22 +5,22 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class NamDaoTao {
     @Id
     @Column(name = "Nam")
-    private Integer id;
+    private Integer nam;
 
-//    @JsonIgnore
-//    @ManyToMany(mappedBy = "namDaoTaos")
-//    private List<ChuongTrinhDaoTao> chuongTrinhDaoTaos;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "namDaoTaos")
+    private List<ChuongTrinhDaoTao> chuongTrinhDaoTaos;
 }

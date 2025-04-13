@@ -1,7 +1,7 @@
 package com.example.CTDT_APP.controller;
 
-import com.example.CTDT_APP.dto.request.NDTCreationRequest;
-import com.example.CTDT_APP.dto.request.NDTUpdateRequest;
+import com.example.CTDT_APP.dto.request.NganhDaoTaoCreationRequest;
+import com.example.CTDT_APP.dto.request.NganhDaoTaoUpdateRequest;
 import com.example.CTDT_APP.dto.response.ApiResponse;
 import com.example.CTDT_APP.service.NganhDaoTaoService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class NganhDaoTaoController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createNganhDaoTao(@RequestBody NDTCreationRequest req) {
+    public ResponseEntity<ApiResponse> createNganhDaoTao(@RequestBody NganhDaoTaoCreationRequest req) {
         ApiResponse response = ApiResponse.builder()
                 .code(201)
                 .message("Tạo ngành đào tạo thành công")
@@ -37,7 +37,7 @@ public class NganhDaoTaoController {
 
     @PutMapping("/{maNganh}")
     public ResponseEntity<ApiResponse> updateNganhDaoTao(
-            @PathVariable String maNganh, @RequestBody NDTUpdateRequest req
+            @PathVariable String maNganh, @RequestBody NganhDaoTaoUpdateRequest req
     ) {
         ApiResponse response = ApiResponse.builder()
                 .code(200)

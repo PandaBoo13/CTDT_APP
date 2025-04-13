@@ -50,11 +50,11 @@ public class MonHoc {
     private List<KiHoc> kiHocs;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "MaKhoi")
     private KhoiKienThuc khoiKienThuc;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "monHocLienQuan")
-    private List<QuanHeMonHoc> quanHeMonHocs;
+    @OneToMany(mappedBy = "monChinh")
+    private List<QuanHeMonHoc> dsMonLienQuan;
 }

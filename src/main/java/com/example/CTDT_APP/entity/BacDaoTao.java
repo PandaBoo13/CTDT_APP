@@ -29,6 +29,6 @@ public class BacDaoTao {
     private LocalDate ngayTao;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "capBac", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bacDaoTao", fetch = FetchType.LAZY)
     private List<ChuongTrinhDaoTao> chuongTrinhDaoTaos;
 }

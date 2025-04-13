@@ -4,11 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class KTTCreationRequest {
-    @NotBlank(message = "Mã khối không được để trống")
-    private String maKhoi;
+public class KhoiKienThucUpdateRequest {
     @NotBlank(message = "Tên khối không được để trống")
     private String tenKhoi;
     private String moTa;
-    private String parent;
 }

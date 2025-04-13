@@ -15,15 +15,16 @@ public class QuanHeMonHoc {
     private QuanHeMonHocId id;
 
     @MapsId("maMonChinh")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaMonChinh")
-    private MonHoc monHocChinh;
+    private MonHoc monChinh;
 
     @MapsId("maMonLienQuan")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaMonLienQuan")
-    private MonHoc monHocLienQuan;
+    private MonHoc monLienQuan;
 
     @Column(name = "LoaiDieuKien")
+    @Enumerated(EnumType.STRING)
     private DieuKienMonHoc loaiDieuKien;
 }

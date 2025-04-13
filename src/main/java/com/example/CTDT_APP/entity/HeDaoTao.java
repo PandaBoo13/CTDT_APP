@@ -19,6 +19,6 @@ public class HeDaoTao {
     private String tenHe;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "maHe", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "heDaoTao", fetch = FetchType.LAZY)
     private List<ChuongTrinhDaoTao> chuongTrinhDaoTaos;
 }
