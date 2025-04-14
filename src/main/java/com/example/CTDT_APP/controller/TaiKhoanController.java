@@ -1,5 +1,6 @@
 package com.example.CTDT_APP.controller;
 
+import com.example.CTDT_APP.dto.request.DoiMatKhauRequest;
 import com.example.CTDT_APP.dto.request.TaiKhoanLoginRequest;
 import com.example.CTDT_APP.dto.request.TaiKhoanRegisterRequest;
 import com.example.CTDT_APP.dto.response.ApiResponse;
@@ -68,4 +69,14 @@ public class TaiKhoanController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/doi-mat-khau/{maTaiKhoan}")
+    public ResponseEntity<ApiResponse> doiMatKhau(@PathVariable String maTaiKhoan, @RequestBody DoiMatKhauRequest request) {
+        taiKhoanService.doiMatKhau(maTaiKhoan, request);
+        ApiResponse response = ApiResponse.builder()
+                .code(200)
+                .message("Đổi mật khẩu thành công")
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.CTDT_APP.service;
 
 import com.example.CTDT_APP.constant.TrangThai;
+import com.example.CTDT_APP.dto.request.DoiMatKhauRequest;
 import com.example.CTDT_APP.dto.request.TaiKhoanLoginRequest;
 import com.example.CTDT_APP.dto.request.TaiKhoanRegisterRequest;
 import com.example.CTDT_APP.dto.response.AuthRespone;
@@ -12,6 +13,7 @@ import com.example.CTDT_APP.repository.TaiKhoanRepository;
 import com.example.CTDT_APP.repository.VaiTroRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -92,4 +94,17 @@ public class TaiKhoanService {
                 .isValidToken(jwtService.isTokenExpired(token))
                 .build();
     }
+
+    public void doiMatKhau(String maTaiKhoan, DoiMatKhauRequest req) {
+        TaiKhoan taiKhoan = taiKhoanRepo.findById(maTaiKhoan)
+                .orElseThrow(() -> new AppException("Tài khoản không tồn tại"));
+
+        if (!passwordEncoder.matches(req.getMatKhauCu(), taiKhoan.getMatKhau())) {
+            throw new AppException("Mật khẩu cũ không đúng");
+        }
+
+        taiKhoan.setMatKhau(passwordEncoder.encode(req.getMatKhauMoi()));
+        taiKhoanRepo.save(taiKhoan);
+    }
+
 }

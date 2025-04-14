@@ -11,7 +11,7 @@ spring:
       name: user
       password: ''
   flyway:
-    enabled: false
+    enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
 
