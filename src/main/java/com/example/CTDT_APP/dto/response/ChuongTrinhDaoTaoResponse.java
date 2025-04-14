@@ -1,16 +1,17 @@
 package com.example.CTDT_APP.dto.response;
 
-import lombok.Builder;
+import com.example.CTDT_APP.constant.TrangThai;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-@Builder
 public class ChuongTrinhDaoTaoResponse {
     private String maCTDT;
     private String tenCTDT;
     private String moTa;
-    private String trangThai;
-    private String capBac;
-    private String heDaoTao;
-    private String nganhDaoTao;
+    private TrangThai trangThai;
+
+    // Danh sách các kế hoạch học tập của CTDT
+    private List<KeHoachHocTapResponse> keHoachHocTaps;
 }

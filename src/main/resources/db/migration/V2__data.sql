@@ -27,7 +27,7 @@ insert into TaiKhoan (MaTaiKhoan, TenDangNhap,MatKhau, MaVaiTro)
 values
 ('admin', 'admin', '$2a$10$Eof5DH8meJQDpnVp2GgA9.qjdHiP0IiAUr0SEZwozU8oWgpfjbiZ.', 'ADMIN'),
 ('employee', 'employee', '$2a$10$Eof5DH8meJQDpnVp2GgA9.qjdHiP0IiAUr0SEZwozU8oWgpfjbiZ.', 'EMPLOYEE');
-# password: 123
+# password: 123456
 
 insert into NhanVien (MaNhanVien, HoTen, NgayThangNamSinh, SoDienThoai, Email, GioiTinh, MaTaiKhoan)
 values
