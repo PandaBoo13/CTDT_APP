@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 
 import java.util.List;
@@ -21,6 +21,6 @@ public class NamDaoTao {
     private Integer nam;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "namDaoTaos")
-    private List<ChuongTrinhDaoTao> chuongTrinhDaoTaos;
+    @OneToMany(mappedBy = "namDaoTao", fetch = jakarta.persistence.FetchType.LAZY)
+    private List<NamCTDT> namCtDtList;
 }

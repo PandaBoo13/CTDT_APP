@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -47,11 +46,8 @@ public class ChuongTrinhDaoTao {
     @OneToMany(mappedBy = "chuongTrinhDaoTao", fetch = FetchType.LAZY)
     private List<KeHoachHocTap> keHoachHocTaps;
 
-    @ManyToMany
-    @JoinTable(
-            name = "Nam_CTDT",
-            joinColumns = @JoinColumn(name = "MaCTDT"),
-            inverseJoinColumns = @JoinColumn(name = "Nam")
-    )
-    private Set<NamDaoTao> namDaoTaos;
+    // Quan hệ với join table Nam_CTDT
+    @JsonIgnore
+    @OneToMany(mappedBy = "chuongTrinhDaoTao", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<NamCTDT> namCtDtList;
 }
