@@ -42,22 +42,26 @@ public class KeHoachHocTapService {
         return keHoachHocTapRepo.save(keHoachHocTap);
     }
 
+    // Read: Lấy tất cả các KeHoachHocTap theo mã CTDT, chuyển đổi sang DTO response có thêm trường tenChuyenNganh
     public List<KeHoachHocTapResponse> getAllKehoachHocTap(String maCTDT) {
         ChuongTrinhDaoTao chuongTrinhDaoTao = chuongTrinhDaoTaoRepo.findById(maCTDT)
                 .orElseThrow(() -> new AppException("Chương trình đào tạo không tồn tại"));
 
         return keHoachHocTapRepo
                 .findAllByChuongTrinhDaoTao(chuongTrinhDaoTao).stream()
-                .map((keHoachHocTap) ->
+                .map(keHoachHocTap ->
                         KeHoachHocTapResponse.builder()
                                 .maKHHT(keHoachHocTap.getMaKHHT())
                                 .maCTDT(keHoachHocTap.getChuongTrinhDaoTao().getMaCTDT())
+                                // Bổ sung trường tenChuyenNganh từ entity ChuyenNganh
                                 .maChuyenNganh(keHoachHocTap.getChuyenNganh().getMaChuyenNganh())
+                                .tenChuyenNganh(keHoachHocTap.getChuyenNganh().getTenChuyenNganh())
                                 .moTa(keHoachHocTap.getMoTa())
                                 .build())
-                .toList();
+                .collect(Collectors.toList());
     }
 
+    // Read: Lấy chi tiết KeHoachHocTap theo mã KHHT, trả về thông tin chi tiết các KiHoc và danh sách MonHoc của mỗi KiHoc
     public List<KeHoachHocTapDetailsResponse> getAllKeHoachHocTapDetails(String maKTHHT) {
         KeHoachHocTap keHoachHocTap = keHoachHocTapRepo.findById(maKTHHT)
                 .orElseThrow(() -> new AppException("Kế hoạch học tập không tồn tại"));
@@ -65,8 +69,10 @@ public class KeHoachHocTapService {
         return keHoachHocTap.getKiHocs().stream()
                 .map(kiHoc -> KeHoachHocTapDetailsResponse.builder()
                         .ki(kiHoc.getKi())
-                        .monHocs(kiHoc.getMonHocs().stream().map((monHoc) -> modelMapper.map(monHoc, MonHocResponse.class)).collect(Collectors.toSet()))
+                        .monHocs(kiHoc.getMonHocs().stream()
+                                .map(monHoc -> modelMapper.map(monHoc, MonHocResponse.class))
+                                .collect(Collectors.toSet()))
                         .build())
-                .toList();
+                .collect(Collectors.toList());
     }
 }

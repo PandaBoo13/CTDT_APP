@@ -1,7 +1,9 @@
 package com.example.CTDT_APP.config;
 
 import com.example.CTDT_APP.dto.response.ChuyenNganhReponse;
+import com.example.CTDT_APP.dto.response.KeHoachHocTapResponse;
 import com.example.CTDT_APP.entity.ChuyenNganh;
+import com.example.CTDT_APP.entity.KeHoachHocTap;
 import com.example.CTDT_APP.entity.NhanVien;
 import com.example.CTDT_APP.entity.NhanVienResponse;
 import org.modelmapper.ModelMapper;
@@ -26,6 +28,16 @@ public class GlobalConfig {
         modelMapper.typeMap(NhanVien.class, NhanVienResponse.class)
                 .addMappings(mapper -> mapper.map(NhanVien::getTaiKhoan, NhanVienResponse::setTrangThai));
 
+        // Custom mapping cho KeHoachHocTap sang KeHoachHocTapResponse
+        modelMapper.typeMap(KeHoachHocTap.class, KeHoachHocTapResponse.class)
+                .addMappings(mapper -> {
+                    mapper.map(src -> src.getChuongTrinhDaoTao().getMaCTDT(), KeHoachHocTapResponse::setMaCTDT);
+                    mapper.map(src -> src.getChuyenNganh().getMaChuyenNganh(), KeHoachHocTapResponse::setMaChuyenNganh);
+                    mapper.map(src -> src.getChuyenNganh().getTenChuyenNganh(), KeHoachHocTapResponse::setTenChuyenNganh);
+                    mapper.map(KeHoachHocTap::getMoTa, KeHoachHocTapResponse::setMoTa);
+                });
+
         return modelMapper;
     }
+
 }
