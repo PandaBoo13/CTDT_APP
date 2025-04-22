@@ -5,13 +5,13 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/CTDT}
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:12345}
+    password: ${DB_PASSWORD:root}
   security:
     user:
       name: user
       password: ''
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
 
@@ -20,7 +20,7 @@ spring:
       ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-
+    show-sql: true
 jwt:
   signerKey: "PzcEXHkagVn34ElrlcOUQLazHeIg86xNVPk5Fj94TzH0RyCLngqSyPmzUtWc7yyP"
   expirationTime: 86400000

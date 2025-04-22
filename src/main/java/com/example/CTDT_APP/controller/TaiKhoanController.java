@@ -69,10 +69,21 @@ public class TaiKhoanController {
         return ResponseEntity.ok(response);
     }
 
+
+    @PostMapping("/doi-mat-khau/{username}")
+    public ResponseEntity<ApiResponse> doiMatKhau(@PathVariable String username, @RequestBody DoiMatKhauRequest request) {
+        taiKhoanService.doiMatKhau(username, request);
+        ApiResponse response = ApiResponse.builder()
+                .code(200)
+                .message("Đổi mật khẩu thành công")
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/doi-mat-khau/{maTaiKhoan}")
-    public ResponseEntity<ApiResponse> doiMatKhau(@PathVariable String maTaiKhoan, @RequestBody DoiMatKhauRequest request) {
-        taiKhoanService.doiMatKhau(maTaiKhoan, request);
+    @PostMapping("/cap-mat-khau/{maTaiKhoan}")
+    public ResponseEntity<ApiResponse> capMatKhau(@PathVariable String maTaiKhoan, @RequestBody DoiMatKhauRequest request) {
+        taiKhoanService.capMatKhau(maTaiKhoan, request);
         ApiResponse response = ApiResponse.builder()
                 .code(200)
                 .message("Đổi mật khẩu thành công")

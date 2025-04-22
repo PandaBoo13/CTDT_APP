@@ -1,6 +1,7 @@
 package com.example.CTDT_APP.controller;
 
 import com.example.CTDT_APP.dto.request.MonHocCreationRequest;
+import com.example.CTDT_APP.dto.request.MonHocUpdateRequest;
 import com.example.CTDT_APP.dto.response.ApiResponse;
 import com.example.CTDT_APP.service.MonHocService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,15 @@ public class MonHocController {
                 .code(201)
                 .message("Tạo môn học thành công")
                 .data(monHocService.createMonHoc(req))
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse> updateMonHoc(@PathVariable String id ,@RequestBody MonHocUpdateRequest req) {
+        ApiResponse response = ApiResponse.builder()
+                .message("Update môn học thành công")
+                .data(monHocService.updateMonHoc(id, req))
                 .build();
         return ResponseEntity.ok(response);
     }

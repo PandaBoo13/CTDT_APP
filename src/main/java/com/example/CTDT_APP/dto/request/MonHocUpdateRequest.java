@@ -2,10 +2,15 @@ package com.example.CTDT_APP.dto.request;
 
 import com.example.CTDT_APP.constant.NgonNgu;
 import com.example.CTDT_APP.constant.TrangThai;
+import com.example.CTDT_APP.dto.response.QuanHeMonHocResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MonHocUpdateRequest {
     @NotBlank(message = "Tên môn học không được để trống")
     private String tenMon;
@@ -24,4 +29,5 @@ public class MonHocUpdateRequest {
     private TrangThai trangThai;
     @NotBlank(message = "Khối kiến thức không được để trống")
     private String maKhoi;
+    private List<QuanHeMonHocRequest> quanHeMonHoc;
 }

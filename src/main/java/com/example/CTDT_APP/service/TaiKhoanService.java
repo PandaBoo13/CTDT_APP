@@ -95,8 +95,19 @@ public class TaiKhoanService {
                 .build();
     }
 
-    public void doiMatKhau(String maTaiKhoan, DoiMatKhauRequest req) {
-        TaiKhoan taiKhoan = taiKhoanRepo.findById(maTaiKhoan)
+    public void capMatKhau(String username, DoiMatKhauRequest req) {
+        TaiKhoan taiKhoan = taiKhoanRepo.findByTenDangNhap(username)
+                .orElseThrow(() -> new AppException("Tài khoản không tồn tại"));
+
+//        if (!passwordEncoder.matches(req.getMatKhauCu(), taiKhoan.getMatKhau())) {
+//            throw new AppException("Mật khẩu cũ không đúng");
+//        }
+
+        taiKhoan.setMatKhau(passwordEncoder.encode(req.getMatKhauMoi()));
+        taiKhoanRepo.save(taiKhoan);
+    }
+    public void doiMatKhau(String id, DoiMatKhauRequest req) {
+        TaiKhoan taiKhoan = taiKhoanRepo.findById(id)
                 .orElseThrow(() -> new AppException("Tài khoản không tồn tại"));
 
         if (!passwordEncoder.matches(req.getMatKhauCu(), taiKhoan.getMatKhau())) {
@@ -106,5 +117,4 @@ public class TaiKhoanService {
         taiKhoan.setMatKhau(passwordEncoder.encode(req.getMatKhauMoi()));
         taiKhoanRepo.save(taiKhoan);
     }
-
 }
