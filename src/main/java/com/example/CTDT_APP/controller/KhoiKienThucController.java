@@ -26,7 +26,7 @@ public class KhoiKienThucController {
     @PostMapping
     public ResponseEntity<ApiResponse> createKhoiKienThuc(@RequestBody KhoiKienThucCreationRequest req) {
         ApiResponse response = ApiResponse.builder()
-                .code(201)
+                .code(200)
                 .message("Tạo khối kiến thức thành công")
                 .data(khoiKienThucService.createKhoiKienThuc(req))
                 .build();
@@ -49,7 +49,7 @@ public class KhoiKienThucController {
     public ResponseEntity<ApiResponse> deleteKhoiKienThuc(@PathVariable String maKhoi) {
         khoiKienThucService.deleteKhoiKienThuc(maKhoi);
         ApiResponse response = ApiResponse.builder()
-                .code(204)
+                .code(200)
                 .message("Xóa khối kiến thức thành công")
                 .build();
         return ResponseEntity.ok(response);
