@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Builder
 public class NhanVienUpdateRequest {
     @NotBlank(message = "Họ và tên không được để trống")
-    private String hoVaTen;
+    private String hoTen;
 
     @Email(message = "Email không hợp lệ")
     private String email;
