@@ -1,8 +1,12 @@
 package com.example.CTDT_APP.service;
 
+import com.example.CTDT_APP.dto.request.NhanVienUpdateRequest;
+import com.example.CTDT_APP.entity.NhanVien;
 import com.example.CTDT_APP.entity.NhanVienResponse;
+import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.repository.NhanVienRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +15,7 @@ import java.util.List;
 @Service
 public class NhanVienService {
     private final NhanVienRepository nhanVienRepository;
+    private final ModelMapper modelMapper;
 
     public List<NhanVienResponse> getAllNhanVien() {
         return nhanVienRepository.findAll().stream()
@@ -27,5 +32,12 @@ public class NhanVienService {
                                 .trangThai(nhanVien.getTaiKhoan().getTrangThai().getValue())
                                 .build())
                 .toList();
+    }
+
+    public NhanVienResponse updateNhanVien(String id, NhanVienUpdateRequest request) {
+        NhanVien updateNhanVien = nhanVienRepository.findById(id)
+                .orElseThrow(() -> new AppException("Không tìm thấy nhân viên"));
+        modelMapper.map(request, updateNhanVien);
+        return modelMapper.map(nhanVienRepository.save(updateNhanVien), NhanVienResponse.class);
     }
 }

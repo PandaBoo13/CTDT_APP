@@ -31,7 +31,7 @@ public class TaiKhoanController {
     @PostMapping("/dang-ki")
     public ResponseEntity<ApiResponse> dangKi(@RequestBody TaiKhoanRegisterRequest request) {
         ApiResponse response = ApiResponse.builder()
-                .code(201)
+                .code(200)
                 .message("Tạo tài khoản thành công")
                 .data(taiKhoanService.register(request))
                 .build();
