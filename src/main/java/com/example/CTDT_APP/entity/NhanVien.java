@@ -19,9 +19,9 @@ public class NhanVien {
     @GenerateNanoID
     @Column(name = "MaNhanVien")
     private String MaNhanVien;
-    @Column(name = "Email")
+    @Column(name = "Email", unique = true)
     private String email;
-    @Column(name = "SoDienThoai")
+    @Column(name = "SoDienThoai", unique = true)
     private String soDienThoai;
     @Column(name = "HoTen")
     private String hoTen;
