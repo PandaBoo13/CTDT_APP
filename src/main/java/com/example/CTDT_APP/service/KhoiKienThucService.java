@@ -38,13 +38,23 @@ public class KhoiKienThucService {
 
         KhoiKienThuc khoi = mapper.map(req, KhoiKienThuc.class);
 
-        Optional.ofNullable(req.getParent())
-                .map(parentId -> khoiKienThucRepo.findById(parentId)
-                        .orElseThrow(() -> new AppException("Khối kiến thức cha không tồn tại")))
-                .ifPresent(parent -> {
-                    validateNoCycle(khoi, parent);
-                    khoi.setParent(parent);
-                });
+        log.info("kasad " + req.getParent());
+
+        if (!req.getParent().isBlank()) {
+            KhoiKienThuc ktt = khoiKienThucRepo.findById(req.getParent())
+                    .orElseThrow(() -> new AppException("Khối kiến thức cha không tồn tại"));
+            khoi.setParent(ktt);
+        } else {
+            khoi.setParent(null);
+        }
+
+//        Optional.ofNullable(req.getParent())
+//                .map(parentId -> khoiKienThucRepo.findById(parentId)
+//                        .orElseThrow(() -> new AppException("Khối kiến thức cha không tồn tại")))
+//                .ifPresent(parent -> {
+//                    validateNoCycle(khoi, parent);
+//                    khoi.setParent(parent);
+//                });
 
         return khoiKienThucRepo.save(khoi);
     }
