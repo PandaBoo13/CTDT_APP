@@ -7,8 +7,10 @@ import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.repository.HeDaoTaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -41,6 +43,12 @@ public class HeDaoTaoService {
         if (!heDaoTaoRepository.existsById(maHeDaoTao)) {
             throw new AppException("Không tìm thấy hệ đào tạo");
         }
-        heDaoTaoRepository.deleteById(maHeDaoTao);
+        try{
+            heDaoTaoRepository.deleteById(maHeDaoTao);
+        } catch(DataIntegrityViolationException e){
+            if(e.getRootCause() instanceof SQLIntegrityConstraintViolationException){
+                throw new AppException("Không thể xóa vì có chương trình đào tạo tham chiếu đến hệ đào tạo này");
+            }
+        }
     }
 }

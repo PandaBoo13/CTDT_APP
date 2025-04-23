@@ -37,8 +37,17 @@ public class MonHocController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateMonHoc(@PathVariable String id ,@RequestBody MonHocUpdateRequest req) {
         ApiResponse response = ApiResponse.builder()
-                .message("Update môn học thành công")
+                .message("Cập nhật môn học thành công")
                 .data(monHocService.updateMonHoc(id, req))
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteMonHoc(@PathVariable String id) {
+        monHocService.deleteMonHoc(id);
+        ApiResponse response = ApiResponse.builder()
+                .message("Xóa môn học thành công")
                 .build();
         return ResponseEntity.ok(response);
     }

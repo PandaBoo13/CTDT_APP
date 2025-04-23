@@ -7,8 +7,10 @@ import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.repository.BacDaoTaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -42,6 +44,13 @@ public class    BacDaoTaoService {
         if (!bacDaoTaoRepository.existsById(maBacDaoTao)) {
             throw new AppException("Không tìm thấy bậc đào tạo");
         }
-        bacDaoTaoRepository.deleteById(maBacDaoTao);
+        try {
+            bacDaoTaoRepository.deleteById(maBacDaoTao);
+        } catch(DataIntegrityViolationException e){
+            if(e.getRootCause() instanceof SQLIntegrityConstraintViolationException){
+                throw new AppException("Không thể xóa vì đã có chương trình đào tạo tham chiếu đến bậc đào tạo này");
+            }
+            throw new AppException("Không thể xóa");
+        }
     }
 }

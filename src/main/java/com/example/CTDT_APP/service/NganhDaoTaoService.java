@@ -9,8 +9,10 @@ import com.example.CTDT_APP.repository.KhoaRepository;
 import com.example.CTDT_APP.repository.NganhDaoTaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -50,6 +52,12 @@ public class NganhDaoTaoService {
 
     public void deleteNganhDaoTao(String maNganhDaoTao) {
         if (!nganhDaoTaoRepo.existsById(maNganhDaoTao)) throw new AppException("Ngành đào tạo không tồn tại");
-        nganhDaoTaoRepo.deleteById(maNganhDaoTao);
+        try {
+            nganhDaoTaoRepo.deleteById(maNganhDaoTao);
+        } catch(DataIntegrityViolationException e){
+            if(e.getRootCause() instanceof SQLIntegrityConstraintViolationException){
+                throw new AppException("Không thể xóa vì đã có chuyên ngành hoặc kế hoạch đào tạo tham chiếu đến ngành này");
+            }
+        }
     }
 }

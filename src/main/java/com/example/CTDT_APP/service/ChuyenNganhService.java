@@ -10,8 +10,10 @@ import com.example.CTDT_APP.repository.ChuyenNganhRepository;
 import com.example.CTDT_APP.repository.NganhDaoTaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -56,6 +58,12 @@ public class ChuyenNganhService {
 
     public void deleteChuyenNganh(String maChuyenNganh) {
         if (!chuyenNganhRepo.existsById(maChuyenNganh)) throw new AppException("Không tìm thấy chuyên ngành");
-        chuyenNganhRepo.deleteById(maChuyenNganh);
+        try {
+            chuyenNganhRepo.deleteById(maChuyenNganh);
+        } catch(DataIntegrityViolationException e){
+            if(e.getRootCause() instanceof SQLIntegrityConstraintViolationException){
+                throw new AppException("Không thể xóa vì đã có chương trình đào tạo tham chiếu đến chuyên ngành này");
+            }
+        }
     }
 }

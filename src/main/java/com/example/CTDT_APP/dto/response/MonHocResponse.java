@@ -3,13 +3,17 @@ package com.example.CTDT_APP.dto.response;
 import com.example.CTDT_APP.constant.NgonNgu;
 import com.example.CTDT_APP.constant.TrangThai;
 import com.example.CTDT_APP.entity.KhoiKienThuc;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MonHocResponse {
     private String maMon;
     private String tenMon;

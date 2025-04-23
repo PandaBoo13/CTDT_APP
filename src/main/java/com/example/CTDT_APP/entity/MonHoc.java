@@ -55,6 +55,10 @@ public class MonHoc {
     private KhoiKienThuc khoiKienThuc;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "monChinh")
+    @OneToMany(
+            mappedBy = "monChinh",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<QuanHeMonHoc> dsMonLienQuan;
 }
