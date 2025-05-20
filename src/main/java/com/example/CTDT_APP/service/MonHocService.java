@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -94,12 +95,20 @@ public class MonHocService {
 
         KhoiKienThuc khoiKienThuc = khoiKienThucRepo.findById(req.getMaKhoi())
                 .orElseThrow(() -> new AppException("Khối kiến thức không tồn tại"));
+
         log.info(khoiKienThuc.getTenKhoi());
         mapper.map(req, monHoc);
         monHoc.setKhoiKienThuc(khoiKienThuc);
+        log.info("quan he mon hoc {}: ", req.getQuanHeMonHoc());
+
+
+        MonHoc updatedMonHoc = monHocRepo.save(monHoc);
+
+
+        monHocLienQuanService.updateMonHocLienQuan(updatedMonHoc.getMaMon(), req.getQuanHeMonHoc());
 
         return mapper.map(
-                monHocRepo.save(monHoc), MonHocResponse.class
+                updatedMonHoc, MonHocResponse.class
         );
     }
 
