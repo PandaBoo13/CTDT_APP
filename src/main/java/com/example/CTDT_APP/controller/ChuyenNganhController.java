@@ -24,6 +24,16 @@ public class ChuyenNganhController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/nganh/{id}")
+    public ResponseEntity<ApiResponse> getChuyenNganhByNganh(@PathVariable("id") String id) {
+        ApiResponse response = ApiResponse.builder()
+                .code(200)
+                .message("Lấy danh sách chuyên ngành theo nganh thành công")
+                .data(chuyenNganhService.getChuyenNganhByNganh(id))
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse> createChuyenNganh(@RequestBody ChuyenNganhCreationRequest req) {
         ApiResponse response = ApiResponse.builder()

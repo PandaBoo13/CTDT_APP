@@ -24,7 +24,7 @@ public class KhoiKienThuc {
     private String moTa;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Parent")
     private KhoiKienThuc parent;
 

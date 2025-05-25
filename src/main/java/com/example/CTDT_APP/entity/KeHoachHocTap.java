@@ -1,6 +1,8 @@
 package com.example.CTDT_APP.entity;
 
 import com.example.CTDT_APP.util.GenerateNanoID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +28,7 @@ public class KeHoachHocTap {
     @JoinColumn(name = "MaChuyenNganh")
     private ChuyenNganh chuyenNganh;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "keHoachHocTap")
     private List<KiHoc> kiHocs;
 

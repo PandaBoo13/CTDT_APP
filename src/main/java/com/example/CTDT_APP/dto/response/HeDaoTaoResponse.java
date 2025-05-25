@@ -1,5 +1,6 @@
 package com.example.CTDT_APP.dto.response;
 
+
 import lombok.*;
 
 @Setter
@@ -7,7 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NganhDaoTaoResponse {
-    private String maNganh;
-    private String tenNganhTV;
+public class HeDaoTaoResponse {
+    private String maHe;
+    private String tenHe;
 }

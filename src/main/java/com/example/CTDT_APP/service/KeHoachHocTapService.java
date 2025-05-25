@@ -42,6 +42,15 @@ public class KeHoachHocTapService {
         return keHoachHocTapRepo.save(keHoachHocTap);
     }
 
+    public KeHoachHocTap updateKeHoachHocTap(String maKHHT,KeHoachHocTapCreationRequest req) {
+        KeHoachHocTap keHoachHocTap = keHoachHocTapRepo.findById(maKHHT)
+                .orElseThrow(() -> new AppException("Ke hoach hoc tap khong ton tai"));
+
+
+
+        return keHoachHocTapRepo.save(keHoachHocTap);
+    }
+
     // Read: Lấy tất cả các KeHoachHocTap theo mã CTDT, chuyển đổi sang DTO response có thêm trường tenChuyenNganh
     public List<KeHoachHocTapResponse> getAllKehoachHocTap(String maCTDT) {
         ChuongTrinhDaoTao chuongTrinhDaoTao = chuongTrinhDaoTaoRepo.findById(maCTDT)
@@ -74,5 +83,9 @@ public class KeHoachHocTapService {
                                 .collect(Collectors.toSet()))
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public void deleteKeHoachHocTap(String maKHHT){
+        keHoachHocTapRepo.deleteById(maKHHT);
     }
 }

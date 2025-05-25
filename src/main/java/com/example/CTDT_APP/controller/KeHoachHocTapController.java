@@ -7,6 +7,7 @@ import com.example.CTDT_APP.dto.response.KeHoachHocTapResponse;
 import com.example.CTDT_APP.service.KeHoachHocTapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/ke-hoach-hoc-tap")
 @RequiredArgsConstructor
+@Slf4j
 public class KeHoachHocTapController {
 
     private final KeHoachHocTapService keHoachHocTapService;
@@ -24,9 +26,10 @@ public class KeHoachHocTapController {
     public ResponseEntity<ApiResponse> createKeHoachHocTap(
             @Valid @RequestBody KeHoachHocTapCreationRequest req) {
         // Service trả về entity được lưu; nếu cần có thể map sang DTO nhưng ở đây ta trả về trực tiếp
+        log.info(req.toString());
         var createdKeHoach = keHoachHocTapService.createKeHoachHocTap(req);
         ApiResponse response = ApiResponse.builder()
-                .code(201)
+                .code(200)
                 .message("Tạo kế hoạch học tập thành công")
                 .data(createdKeHoach)
                 .build();
@@ -35,7 +38,7 @@ public class KeHoachHocTapController {
 
     // Read: Lấy danh sách các KeHoachHocTap theo mã CTDT,
     // chuyển đổi sang DTO KeHoachHocTapResponse (bao gồm trường tenChuyenNganh)
-    @GetMapping("/ctdt/{maCTDT}")
+    @GetMapping("/{maCTDT}")
     public ResponseEntity<ApiResponse> getAllKeHoachHocTap(@PathVariable String maCTDT) {
         List<KeHoachHocTapResponse> list = keHoachHocTapService.getAllKehoachHocTap(maCTDT);
         ApiResponse response = ApiResponse.builder()
@@ -58,4 +61,15 @@ public class KeHoachHocTapController {
                 .build();
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{maKTHHT}")
+    public ResponseEntity<ApiResponse> deleteKeHoachHocTap(@PathVariable String maKTHHT) {
+        keHoachHocTapService.deleteKeHoachHocTap(maKTHHT);
+        ApiResponse response = ApiResponse.builder()
+                .code(200)
+                .message("Xoá kế hoạch học tập thành công")
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
 }

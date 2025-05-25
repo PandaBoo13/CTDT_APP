@@ -3,7 +3,10 @@ package com.example.CTDT_APP.service;
 import com.example.CTDT_APP.constant.TrangThai;
 import com.example.CTDT_APP.dto.request.ChuongTrinhDaoTaoCreationRequest;
 import com.example.CTDT_APP.dto.request.ChuongTrinhDaoTaoUpdateRequest;
+import com.example.CTDT_APP.dto.response.BacDaoTaoResponse;
 import com.example.CTDT_APP.dto.response.ChuongTrinhDaoTaoResponse;
+import com.example.CTDT_APP.dto.response.HeDaoTaoResponse;
+import com.example.CTDT_APP.dto.response.NganhDaoTaoResponse;
 import com.example.CTDT_APP.entity.BacDaoTao;
 import com.example.CTDT_APP.entity.ChuongTrinhDaoTao;
 import com.example.CTDT_APP.entity.HeDaoTao;
@@ -14,6 +17,7 @@ import com.example.CTDT_APP.repository.ChuongTrinhDaoTaoRepository;
 import com.example.CTDT_APP.repository.HeDaoTaoRepository;
 import com.example.CTDT_APP.repository.NganhDaoTaoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChuongTrinhDaoTaoService {
 
     private final ChuongTrinhDaoTaoRepository ctdtRepo;
@@ -34,7 +39,13 @@ public class ChuongTrinhDaoTaoService {
     public List<ChuongTrinhDaoTaoResponse> getAllCTDT() {
         return ctdtRepo.findAll()
                 .stream()
-                .map(ctdt -> mapper.map(ctdt, ChuongTrinhDaoTaoResponse.class))
+                .map(ctdt -> {
+                    ChuongTrinhDaoTaoResponse ctdtResponse =  mapper.map(ctdt, ChuongTrinhDaoTaoResponse.class);
+                    ctdtResponse.setHeDaoTaoResponse(mapper.map(ctdt.getHeDaoTao(), HeDaoTaoResponse.class));
+                    ctdtResponse.setBacDaoTaoResponse(mapper.map(ctdt.getBacDaoTao(), BacDaoTaoResponse.class));
+                    ctdtResponse.setNganhDaoTaoResponse(mapper.map(ctdt.getNganhDaoTao(), NganhDaoTaoResponse.class));
+                    return ctdtResponse;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -67,6 +78,7 @@ public class ChuongTrinhDaoTaoService {
         ChuongTrinhDaoTao ctdt = ctdtRepo.findById(maCTDT)
                 .orElseThrow(() -> new AppException("Không tìm thấy chương trình đào tạo"));
 
+        log.info(req.toString());
         BacDaoTao bacDaoTao = bacDaoTaoRepo.findById(req.getMaBac())
                 .orElseThrow(() -> new AppException("Không tìm thấy bậc đào tạo"));
         HeDaoTao heDaoTao = heDaoTaoRepo.findById(req.getMaHe())
