@@ -33,13 +33,6 @@ create table KhoiKienThuc
         foreign key (Parent) references KhoiKienThuc (MaKhoi)
 );
 
-create table LoaiMonHoc
-(
-    MaLoaiMH varchar(21)  not null
-        primary key,
-    TenLoai  varchar(255) not null
-);
-
 create table MonHoc
 (
     MaMon           varchar(21)                                               not null
@@ -153,12 +146,10 @@ create index MaKHHT
 
 create table KiHoc_MonHoc
 (
-    MaKi     varchar(21) not null,
-    MaMon    varchar(21) not null,
-    MaLoaiMH varchar(21) null,
+    MaKi       varchar(21)                                         not null,
+    MaMon      varchar(21)                                         not null,
+    LoaiMonHoc enum ('BAT_BUOC', 'TU_CHON', 'THAY_THE_TOT_NGHIEP') null,
     primary key (MaKi, MaMon),
-    constraint KiHoc_MonHoc_fk
-        foreign key (MaLoaiMH) references LoaiMonHoc (MaLoaiMH),
     constraint KiHoc_MonHoc_ibfk_1
         foreign key (MaKi) references KiHoc (MaKi),
     constraint KiHoc_MonHoc_ibfk_2

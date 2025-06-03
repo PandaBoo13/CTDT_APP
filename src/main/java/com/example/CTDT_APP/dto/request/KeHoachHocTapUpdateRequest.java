@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class KeHoachHocTapCreationRequest {
+public class KeHoachHocTapUpdateRequest {
     @NotBlank(message = "Mã chuyên ngành không được để trống")
     private String maChuyenNganh;
     private String moTa;

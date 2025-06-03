@@ -28,15 +28,6 @@ public class GlobalConfig {
         modelMapper.typeMap(NhanVien.class, NhanVienResponse.class)
                 .addMappings(mapper -> mapper.map(NhanVien::getTaiKhoan, NhanVienResponse::setTrangThai));
 
-        // Custom mapping cho KeHoachHocTap sang KeHoachHocTapResponse
-        modelMapper.typeMap(KeHoachHocTap.class, KeHoachHocTapResponse.class)
-                .addMappings(mapper -> {
-                    mapper.map(src -> src.getChuongTrinhDaoTao().getMaCTDT(), KeHoachHocTapResponse::setMaCTDT);
-                    mapper.map(src -> src.getChuyenNganh().getMaChuyenNganh(), KeHoachHocTapResponse::setMaChuyenNganh);
-                    mapper.map(src -> src.getChuyenNganh().getTenChuyenNganh(), KeHoachHocTapResponse::setTenChuyenNganh);
-                    mapper.map(KeHoachHocTap::getMoTa, KeHoachHocTapResponse::setMoTa);
-                });
-
         return modelMapper;
     }
 

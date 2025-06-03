@@ -13,8 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class KeHoachHocTapResponse {
     private String maKHHT;
-    private String maCTDT;
-    private String maChuyenNganh;
-    private String tenChuyenNganh;
+    private ChuyenNganhBriefResponse chuyenNganh;
     private String moTa;
 }
