@@ -33,6 +33,13 @@ create table KhoiKienThuc
         foreign key (Parent) references KhoiKienThuc (MaKhoi)
 );
 
+create table LoaiMonHoc
+(
+    MaLoaiMH varchar(21)  not null
+        primary key,
+    TenLoai  varchar(255) not null
+);
+
 create table MonHoc
 (
     MaMon           varchar(21)                                               not null
@@ -146,9 +153,12 @@ create index MaKHHT
 
 create table KiHoc_MonHoc
 (
-    MaKi  varchar(21) not null,
-    MaMon varchar(21) not null,
+    MaKi     varchar(21) not null,
+    MaMon    varchar(21) not null,
+    MaLoaiMH varchar(21) null,
     primary key (MaKi, MaMon),
+    constraint KiHoc_MonHoc_fk
+        foreign key (MaLoaiMH) references LoaiMonHoc (MaLoaiMH),
     constraint KiHoc_MonHoc_ibfk_1
         foreign key (MaKi) references KiHoc (MaKi),
     constraint KiHoc_MonHoc_ibfk_2
@@ -190,13 +200,6 @@ create table QuanHeMonHoc
 create index MaMonLienQuan
     on QuanHeMonHoc (MaMonLienQuan);
 
-create table Quyen
-(
-    MaQuyen  varchar(21)  not null
-        primary key,
-    TenQuyen varchar(100) null
-);
-
 create table VaiTro
 (
     MaVaiTro  varchar(21)  not null
@@ -204,20 +207,6 @@ create table VaiTro
     TenVaiTro varchar(100) null,
     MoTa      text         null
 );
-
-create table Quyen_VaiTro
-(
-    MaVaiTro varchar(21) not null,
-    MaQuyen  varchar(21) not null,
-    primary key (MaVaiTro, MaQuyen),
-    constraint Quyen_VaiTro_ibfk_1
-        foreign key (MaVaiTro) references VaiTro (MaVaiTro),
-    constraint Quyen_VaiTro_ibfk_2
-        foreign key (MaQuyen) references Quyen (MaQuyen)
-);
-
-create index MaQuyen
-    on Quyen_VaiTro (MaQuyen);
 
 create table TaiKhoan
 (
@@ -249,23 +238,6 @@ create table NhanVien
 
 create index MaTaiKhoan
     on NhanVien (MaTaiKhoan);
-
-create table QuanTriVien
-(
-    MaQTV            varchar(21)        not null
-        primary key,
-    Email            varchar(100)       null,
-    SoDienThoai      varchar(15)        null,
-    HoTen            varchar(100)       null,
-    NgayThangNamSinh date               null,
-    MaTaiKhoan       varchar(21)        null,
-    GioiTinh         enum ('NAM', 'NU') not null,
-    constraint QuanTriVien_ibfk_1
-        foreign key (MaTaiKhoan) references TaiKhoan (MaTaiKhoan)
-);
-
-create index MaTaiKhoan
-    on QuanTriVien (MaTaiKhoan);
 
 create index MaVaiTro
     on TaiKhoan (MaVaiTro);
