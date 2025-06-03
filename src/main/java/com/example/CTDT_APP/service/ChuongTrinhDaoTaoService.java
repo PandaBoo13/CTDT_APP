@@ -1,18 +1,14 @@
 package com.example.CTDT_APP.service;
 
-import com.example.CTDT_APP.constant.TrangThai;
 import com.example.CTDT_APP.dto.request.ChuongTrinhDaoTaoCreationRequest;
 import com.example.CTDT_APP.dto.request.ChuongTrinhDaoTaoUpdateRequest;
+import com.example.CTDT_APP.dto.response.BacDaoTaoResponse;
 import com.example.CTDT_APP.dto.response.ChuongTrinhDaoTaoResponse;
-import com.example.CTDT_APP.entity.BacDaoTao;
-import com.example.CTDT_APP.entity.ChuongTrinhDaoTao;
-import com.example.CTDT_APP.entity.HeDaoTao;
-import com.example.CTDT_APP.entity.NganhDaoTao;
+import com.example.CTDT_APP.dto.response.HeDaoTaoResponse;
+import com.example.CTDT_APP.dto.response.NganhDaoTaoResponse;
+import com.example.CTDT_APP.entity.*;
 import com.example.CTDT_APP.exception.AppException;
-import com.example.CTDT_APP.repository.BacDaoTaoRepository;
-import com.example.CTDT_APP.repository.ChuongTrinhDaoTaoRepository;
-import com.example.CTDT_APP.repository.HeDaoTaoRepository;
-import com.example.CTDT_APP.repository.NganhDaoTaoRepository;
+import com.example.CTDT_APP.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -29,41 +25,55 @@ public class ChuongTrinhDaoTaoService {
     private final HeDaoTaoRepository heDaoTaoRepo;
     private final NganhDaoTaoRepository nganhDaoTaoRepo;
     private final ModelMapper mapper;
+    private final NamDaoTaoRepository namDaoTaoRepo;
 
     // Read: Lấy danh sách CTDT (bao gồm cả danh sách KeHoachHocTap)
-    public List<ChuongTrinhDaoTaoResponse> getAllCTDT() {
-        return ctdtRepo.findAll()
-                .stream()
-                .map(ctdt -> mapper.map(ctdt, ChuongTrinhDaoTaoResponse.class))
-                .collect(Collectors.toList());
+    public List<ChuongTrinhDaoTaoResponse> getAllChuongTrinhDaoTao() {
+        return ctdtRepo
+                .findAll()
+                .stream().map(ctdt -> {
+                    ChuongTrinhDaoTaoResponse response = mapper.map(ctdt, ChuongTrinhDaoTaoResponse.class);
+                    response.setHeDaoTao(mapper.map(ctdt.getHeDaoTao(), HeDaoTaoResponse.class));
+                    response.setBacDaoTao(mapper.map(ctdt.getBacDaoTao(), BacDaoTaoResponse.class));
+                    response.setNganhDaoTao(mapper.map(ctdt.getNganhDaoTao(), NganhDaoTaoResponse.class));
+                    response.setNamDaoTao(
+                            ctdt.getNamDaoTaos().stream()
+                                    .map(NamDaoTao::getNam)
+                                    .toList());
+                    return response;
+                })
+        .toList();
     }
 
-    // Create: Tạo mới CTDT
-    public ChuongTrinhDaoTaoResponse createCTDT(ChuongTrinhDaoTaoCreationRequest req) {
+    public String createChuongTrinhDaoTao(ChuongTrinhDaoTaoCreationRequest req) {
         if (ctdtRepo.existsById(req.getMaCTDT())) {
-            throw new AppException("Chương trình đào tạo đã tồn tại");
+            throw new AppException("Mã chương trình đào tạo đã tồn tại");
         }
-        // Tra cứu các khóa ngoại
+
         BacDaoTao bacDaoTao = bacDaoTaoRepo.findById(req.getMaBac())
-                .orElseThrow(() -> new AppException("Không tìm thấy bậc đào tạo"));
+                .orElseThrow(() -> new AppException("Bậc đào tạo không tồn tại"));
         HeDaoTao heDaoTao = heDaoTaoRepo.findById(req.getMaHe())
-                .orElseThrow(() -> new AppException("Không tìm thấy hình thức đào tạo"));
+                .orElseThrow(() -> new AppException("Hệ đào tạo không tồn tại"));
         NganhDaoTao nganhDaoTao = nganhDaoTaoRepo.findById(req.getMaNganh())
-                .orElseThrow(() -> new AppException("Không tìm thấy ngành đào tạo"));
+                .orElseThrow(() -> new AppException("Ngành đào tạo không tồn tại"));
 
         ChuongTrinhDaoTao ctdt = mapper.map(req, ChuongTrinhDaoTao.class);
-        // Thiết lập trạng thái (ép kiểu từ String sang enum)
-        ctdt.setTrangThai(TrangThai.valueOf(req.getTrangThai().toUpperCase().replace(" ", "_")));
         ctdt.setBacDaoTao(bacDaoTao);
         ctdt.setHeDaoTao(heDaoTao);
         ctdt.setNganhDaoTao(nganhDaoTao);
+        ctdt.setNamDaoTaos(
+                req.getNamDaoTaos().stream()
+                .map(nam -> {
+                    if (!namDaoTaoRepo.existsById(nam)) throw new AppException("Năm đào tạo không tồn tại");
+                    return NamDaoTao.builder().nam(nam).build();
+                })
+                .toList()
+        );
 
-        ChuongTrinhDaoTao saved = ctdtRepo.save(ctdt);
-        return mapper.map(saved, ChuongTrinhDaoTaoResponse.class);
+        return ctdtRepo.save(ctdt).getMaCTDT();
     }
 
-    // Update: Cập nhật CTDT (ngoại trừ MaCTDT)
-    public ChuongTrinhDaoTaoResponse updateCTDT(String maCTDT, ChuongTrinhDaoTaoUpdateRequest req) {
+    public String updateCTDT(String maCTDT, ChuongTrinhDaoTaoUpdateRequest req) {
         ChuongTrinhDaoTao ctdt = ctdtRepo.findById(maCTDT)
                 .orElseThrow(() -> new AppException("Không tìm thấy chương trình đào tạo"));
 
@@ -74,15 +84,20 @@ public class ChuongTrinhDaoTaoService {
         NganhDaoTao nganhDaoTao = nganhDaoTaoRepo.findById(req.getMaNganh())
                 .orElseThrow(() -> new AppException("Không tìm thấy ngành đào tạo"));
 
-        // Map các thuộc tính cập nhật
         mapper.map(req, ctdt);
-        ctdt.setTrangThai(TrangThai.valueOf(req.getTrangThai().toUpperCase().replace(" ", "_")));
         ctdt.setBacDaoTao(bacDaoTao);
         ctdt.setHeDaoTao(heDaoTao);
         ctdt.setNganhDaoTao(nganhDaoTao);
+        ctdt.setNamDaoTaos(
+                req.getNamDaoTaos().stream()
+                .map(nam -> {
+                    if (!namDaoTaoRepo.existsById(nam)) throw new AppException("Năm đào tạo không tồn tại");
+                    return NamDaoTao.builder().nam(nam).build();
+                })
+                .toList()
+        );
 
-        ChuongTrinhDaoTao updated = ctdtRepo.save(ctdt);
-        return mapper.map(updated, ChuongTrinhDaoTaoResponse.class);
+        return ctdtRepo.save(ctdt).getMaCTDT();
     }
 
     // Delete: Xóa CTDT theo MaCTDT

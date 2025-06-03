@@ -1,7 +1,11 @@
 package com.example.CTDT_APP.dto.request;
 
+import com.example.CTDT_APP.constant.TrangThai;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.util.Set;
 
 @Data
 public class ChuongTrinhDaoTaoCreationRequest {
@@ -13,8 +17,7 @@ public class ChuongTrinhDaoTaoCreationRequest {
 
     private String moTa;
 
-    @NotBlank(message = "Trạng thái không được để trống")
-    private String trangThai;  // Ví dụ: "HOAT_DONG" hoặc "NGUNG_HOAT_DONG"
+    private TrangThai trangThai;
 
     @NotBlank(message = "Mã bậc đào tạo không được để trống")
     private String maBac;
@@ -24,4 +27,7 @@ public class ChuongTrinhDaoTaoCreationRequest {
 
     @NotBlank(message = "Mã ngành đào tạo không được để trống")
     private String maNganh;
+
+    @NotNull(message = "Danh sách năm đào tạo không được để trống")
+    private Set<Integer> namDaoTaos;
 }

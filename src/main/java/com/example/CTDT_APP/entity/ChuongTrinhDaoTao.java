@@ -3,8 +3,7 @@ package com.example.CTDT_APP.entity;
 import com.example.CTDT_APP.constant.TrangThai;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.Set;
@@ -12,6 +11,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChuongTrinhDaoTao {
     @Id
     @Column(name = "MaCTDT")
@@ -47,11 +49,12 @@ public class ChuongTrinhDaoTao {
     @OneToMany(mappedBy = "chuongTrinhDaoTao", fetch = FetchType.LAZY)
     private List<KeHoachHocTap> keHoachHocTaps;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "Nam_CTDT",
             joinColumns = @JoinColumn(name = "MaCTDT"),
             inverseJoinColumns = @JoinColumn(name = "Nam")
     )
-    private Set<NamDaoTao> namDaoTaos;
+    private List<NamDaoTao> namDaoTaos;
 }
