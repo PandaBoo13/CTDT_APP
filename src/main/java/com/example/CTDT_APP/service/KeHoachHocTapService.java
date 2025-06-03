@@ -1,6 +1,8 @@
 package com.example.CTDT_APP.service;
 
 import com.example.CTDT_APP.dto.request.KeHoachHocTapCreationRequest;
+import com.example.CTDT_APP.dto.request.KeHoachHocTapUpdateRequest;
+import com.example.CTDT_APP.dto.response.ChuyenNganhBriefResponse;
 import com.example.CTDT_APP.dto.response.KeHoachHocTapDetailsResponse;
 import com.example.CTDT_APP.dto.response.KeHoachHocTapResponse;
 import com.example.CTDT_APP.dto.response.MonHocResponse;
@@ -27,7 +29,28 @@ public class KeHoachHocTapService {
     private final ChuyenNganhRepository chuyenNganhRepo;
     private final ModelMapper modelMapper;
 
-    public KeHoachHocTap createKeHoachHocTap(String maCTDT, KeHoachHocTapCreationRequest req) {
+    public List<KeHoachHocTapResponse> getAllKeHoachHocTap(String maCTDT) {
+        ChuongTrinhDaoTao chuongTrinhDaoTao = chuongTrinhDaoTaoRepo.findById(maCTDT)
+                .orElseThrow(() -> new AppException("Chương trình đào tạo không tồn tại"));
+
+        return keHoachHocTapRepo.findAllByChuongTrinhDaoTao(chuongTrinhDaoTao).stream()
+                .map(keHoachHocTap -> {
+
+                    ChuyenNganhBriefResponse chuyenNganh = modelMapper.map(
+                            keHoachHocTap.getChuyenNganh(),
+                            ChuyenNganhBriefResponse.class
+                    );
+
+                    return KeHoachHocTapResponse.builder()
+                            .maKHHT(keHoachHocTap.getMaKHHT())
+                            .chuyenNganh(chuyenNganh)
+                            .moTa(keHoachHocTap.getMoTa())
+                            .build();
+                        })
+                .toList();
+    }
+
+    public String createKeHoachHocTap(String maCTDT, KeHoachHocTapCreationRequest req) {
         ChuongTrinhDaoTao chuongTrinhDaoTao = chuongTrinhDaoTaoRepo.findById(maCTDT)
                 .orElseThrow(() -> new AppException("Chương trình đào tạo không tồn tại"));
 
@@ -40,7 +63,20 @@ public class KeHoachHocTapService {
                 .chuyenNganh(chuyenNganh)
                 .build();
 
-        return keHoachHocTapRepo.save(keHoachHocTap);
+        return keHoachHocTapRepo.save(keHoachHocTap).getMaKHHT();
+    }
+
+    public String updateKeHoachHocTap(String maKHHT, KeHoachHocTapUpdateRequest req) {
+        KeHoachHocTap keHoachHocTap = keHoachHocTapRepo.findById(maKHHT)
+                .orElseThrow(() -> new AppException("Kế hoạch học tập không tồn tại"));
+
+        ChuyenNganh chuyenNganh = chuyenNganhRepo.findById(req.getMaChuyenNganh())
+                .orElseThrow(() -> new AppException("Chuyên ngành không tồn tại"));
+
+        keHoachHocTap.setMoTa(req.getMoTa());
+        keHoachHocTap.setChuyenNganh(chuyenNganh);
+
+        return keHoachHocTapRepo.save(keHoachHocTap).getMaKHHT();
     }
 
 //    // Read: Lấy tất cả các KeHoachHocTap theo mã CTDT, chuyển đổi sang DTO response có thêm trường tenChuyenNganh
