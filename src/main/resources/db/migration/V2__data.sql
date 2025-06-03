@@ -75,3 +75,10 @@ values
 (2028),
 (2029),
 (2030);
+
+# Data LoaiMonHoc
+insert into LoaiMonHoc (MaLoaiMH, TenLoai)
+values
+('BB', 'Bắt buộc'),
+('TC', 'Tự chọn'),
+('HT', 'Học phần thay thế tốt nghiệp');
