@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/v1/ctdt")
 @RequiredArgsConstructor
@@ -22,11 +20,10 @@ public class ChuongTrinhDaoTaoController {
     // Read: Lấy danh sách CTDT (bao gồm list KeHoachHocTap)
     @GetMapping
     public ResponseEntity<ApiResponse> getAllCTDT() {
-        List<ChuongTrinhDaoTaoResponse> list = ctdtService.getAllCTDT();
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Lấy danh sách CTDT thành công")
-                .data(list)
+                .message("Lấy danh sách Chương trình đào tạo thành công")
+                .data(ctdtService.getAllChuongTrinhDaoTao())
                 .build();
         return ResponseEntity.ok(response);
     }
@@ -46,24 +43,24 @@ public class ChuongTrinhDaoTaoController {
     // Create: Tạo mới CTDT
     @PostMapping
     public ResponseEntity<ApiResponse> createCTDT(@Valid @RequestBody ChuongTrinhDaoTaoCreationRequest req) {
-        ChuongTrinhDaoTaoResponse data = ctdtService.createCTDT(req);
         ApiResponse response = ApiResponse.builder()
                 .code(201)
-                .message("Tạo CTDT thành công")
-                .data(data)
+                .message("Tạo mới Chương trình đào tạo thành công")
+                .data(ctdtService.createChuongTrinhDaoTao(req))
                 .build();
         return ResponseEntity.ok(response);
     }
 
     // Update: Cập nhật CTDT (ngoại trừ MaCTDT)
     @PutMapping("/{maCTDT}")
-    public ResponseEntity<ApiResponse> updateCTDT(@PathVariable String maCTDT,
-                                                  @Valid @RequestBody ChuongTrinhDaoTaoUpdateRequest req) {
-        ChuongTrinhDaoTaoResponse data = ctdtService.updateCTDT(maCTDT, req);
+    public ResponseEntity<ApiResponse> updateCTDT(
+            @PathVariable String maCTDT,
+            @Valid @RequestBody ChuongTrinhDaoTaoUpdateRequest req
+    ) {
         ApiResponse response = ApiResponse.builder()
                 .code(200)
-                .message("Cập nhật CTDT thành công")
-                .data(data)
+                .message("Cập nhật Chương trình đào tạo thành công")
+                .data(ctdtService.updateCTDT(maCTDT, req))
                 .build();
         return ResponseEntity.ok(response);
     }
@@ -74,7 +71,7 @@ public class ChuongTrinhDaoTaoController {
         ctdtService.deleteCTDT(maCTDT);
         ApiResponse response = ApiResponse.builder()
                 .code(204)
-                .message("Xóa CTDT thành công")
+                .message("Xóa Chương trình đào tạo thành công")
                 .build();
         return ResponseEntity.ok(response);
     }

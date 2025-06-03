@@ -3,6 +3,9 @@ package com.example.CTDT_APP.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 public class ChuongTrinhDaoTaoUpdateRequest {
     @NotBlank(message = "Tên CTDT không được để trống")
@@ -21,4 +24,6 @@ public class ChuongTrinhDaoTaoUpdateRequest {
 
     @NotBlank(message = "Mã ngành đào tạo không được để trống")
     private String maNganh;
+
+    private Set<Integer> namDaoTaos;
 }

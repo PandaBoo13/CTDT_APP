@@ -6,4 +6,5 @@ import lombok.Data;
 public class NganhDaoTaoResponse {
     private String maNganh;
     private String tenNganhTV;
+    private String tenNganhTA;
 }
