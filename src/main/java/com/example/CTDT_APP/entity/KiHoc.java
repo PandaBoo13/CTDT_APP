@@ -31,7 +31,7 @@ public class KiHoc {
     private KeHoachHocTap keHoachHocTap;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
             name = "KiHoc_MonHoc",
             joinColumns = @JoinColumn(name = "MaKi"),

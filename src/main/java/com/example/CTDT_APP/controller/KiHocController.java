@@ -78,6 +78,18 @@ public class KiHocController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/{maKi}")
+    public ResponseEntity<ApiResponse> deleteKiHoc(
+            @PathVariable String maKi
+    ) {
+        kiHocService.deleteKiHoc(maKi);
+        ApiResponse response = ApiResponse.builder()
+                .code(200)
+                .message("Xóa kì học thành công")
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/{maKi}/mon-hoc/{maMon}")
     public ResponseEntity<ApiResponse> deleteMonHocFromKiHoc(
             @PathVariable String maKi,

@@ -13,6 +13,7 @@ import com.example.CTDT_APP.repository.MonHocRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -81,6 +82,19 @@ public class KiHocService {
         kiHocMonHocRepo.save(kihocMonhoc);
 
         return monHoc.getMaMon();
+    }
+
+    @Transactional
+    public void deleteKiHoc(String maKi) {
+        KiHoc kiHoc = kiHocRepo.findById(maKi)
+                .orElseThrow(() -> new AppException("Kỳ học không tồn tại"));
+
+        for (MonHoc monHoc : kiHoc.getMonHocs()) {
+            monHoc.getKiHocs().remove(kiHoc);
+        }
+        kiHoc.getMonHocs().clear();
+
+        kiHocRepo.delete(kiHoc);
     }
 
     public List<MonHocBriefResponse> getMonHocByKiHoc(String maKi) {

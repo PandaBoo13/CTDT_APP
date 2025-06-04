@@ -6,9 +6,7 @@ import com.example.CTDT_APP.dto.response.ChuyenNganhBriefResponse;
 import com.example.CTDT_APP.dto.response.KeHoachHocTapDetailsResponse;
 import com.example.CTDT_APP.dto.response.KeHoachHocTapResponse;
 import com.example.CTDT_APP.dto.response.MonHocResponse;
-import com.example.CTDT_APP.entity.ChuongTrinhDaoTao;
-import com.example.CTDT_APP.entity.ChuyenNganh;
-import com.example.CTDT_APP.entity.KeHoachHocTap;
+import com.example.CTDT_APP.entity.*;
 import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.repository.ChuongTrinhDaoTaoRepository;
 import com.example.CTDT_APP.repository.ChuyenNganhRepository;
@@ -16,6 +14,7 @@ import com.example.CTDT_APP.repository.KeHoachHocTapRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,6 +76,21 @@ public class KeHoachHocTapService {
         keHoachHocTap.setChuyenNganh(chuyenNganh);
 
         return keHoachHocTapRepo.save(keHoachHocTap).getMaKHHT();
+    }
+
+    @Transactional
+    public void deleteKeHoachHocTap(String maKHHT) {
+        KeHoachHocTap keHoachHocTap = keHoachHocTapRepo.findById(maKHHT)
+                .orElseThrow(() -> new AppException("Kế hoạch học tập không tồn tại"));
+
+        for (KiHoc kiHoc : keHoachHocTap.getKiHocs()) {
+            for (MonHoc monHoc : kiHoc.getMonHocs()) {
+                monHoc.getKiHocs().remove(kiHoc);
+            }
+            kiHoc.getMonHocs().clear();
+        }
+
+        keHoachHocTapRepo.delete(keHoachHocTap);
     }
 
 //    // Read: Lấy tất cả các KeHoachHocTap theo mã CTDT, chuyển đổi sang DTO response có thêm trường tenChuyenNganh
