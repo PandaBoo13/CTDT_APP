@@ -72,17 +72,16 @@ public class MonHocService {
                 .build();
 
         String maMon = monHocRepo.save(monHoc).getMaMon();
+        System.out.print("Mon hoc: " + maMon);
 
-        Optional
-                .ofNullable(req.getQuanHeMonHoc())
-                .ifPresent(quanHeMonHocRequests -> {
-                    monHocLienQuanService.createOrUpdateMonHocLienQuan(maMon, quanHeMonHocRequests);
-                });
+        if (req.getQuanHeMonHoc() != null && !req.getQuanHeMonHoc().isEmpty()) {
+            monHocLienQuanService.createOrUpdateMonHocLienQuan(maMon, req.getQuanHeMonHoc());
+        }
 
         return maMon;
     }
 
-    public MonHocResponse updateMonHoc(String maMonHoc, MonHocUpdateRequest req) {
+    public String updateMonHoc(String maMonHoc, MonHocUpdateRequest req) {
         MonHoc monHoc = monHocRepo.findById(maMonHoc)
                 .orElseThrow(() -> new AppException("Môn học không tồn tại"));
 
@@ -92,9 +91,7 @@ public class MonHocService {
         mapper.map(req, monHoc);
         monHoc.setKhoiKienThuc(khoiKienThuc);
 
-        return mapper.map(
-                monHocRepo.save(monHoc), MonHocResponse.class
-        );
+        return monHocRepo.save(monHoc).getMaMon();
     }
 
     public void deleteMonHoc(String maMonHoc) {
