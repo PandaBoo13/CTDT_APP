@@ -26,7 +26,7 @@ public class KeHoachHocTap {
     @JoinColumn(name = "MaChuyenNganh")
     private ChuyenNganh chuyenNganh;
 
-    @OneToMany(mappedBy = "keHoachHocTap")
+    @OneToMany(mappedBy = "keHoachHocTap", cascade = CascadeType.REMOVE)
     private List<KiHoc> kiHocs;
 
     @Lob

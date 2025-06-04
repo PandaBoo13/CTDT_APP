@@ -57,4 +57,16 @@ public class KeHoachHocTapController {
                 .build();
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{maKHHT}")
+    public ResponseEntity<ApiResponse> deleteKeHoachHocTap(
+            @PathVariable String maKHHT
+    ) {
+        keHoachHocTapService.deleteKeHoachHocTap(maKHHT);
+        ApiResponse response = ApiResponse.builder()
+                .code(200)
+                .message("Xoá kế hoạch học tập thành công")
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }
