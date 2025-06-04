@@ -26,6 +26,7 @@ public class MonHocController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> createMonHoc(@RequestBody MonHocCreationRequest req) {
+        System.out.print("Creating MonHoc: " + req);
         ApiResponse response = ApiResponse.builder()
                 .code(201)
                 .message("Tạo môn học thành công")
