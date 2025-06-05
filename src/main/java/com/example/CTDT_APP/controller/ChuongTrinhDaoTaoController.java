@@ -28,6 +28,7 @@ public class ChuongTrinhDaoTaoController {
         return ResponseEntity.ok(response);
     }
 
+
     // Find: Tìm CTDT theo MaCTDT
     @GetMapping("/{maCTDT}")
     public ResponseEntity<ApiResponse> findCTDT(@PathVariable String maCTDT) {

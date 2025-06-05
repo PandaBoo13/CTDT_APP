@@ -45,6 +45,20 @@ public class ChuongTrinhDaoTaoService {
                 })
         .toList();
     }
+    // Find: Tìm CTDT theo MaCTDT và trả về thông tin cùng danh sách KeHoachHocTap
+    public ChuongTrinhDaoTaoResponse findCTDT(String maCTDT) {
+        ChuongTrinhDaoTao ctdt = ctdtRepo.findById(maCTDT)
+                .orElseThrow(() -> new AppException("Không tìm thấy chương trình đào tạo"));
+        ChuongTrinhDaoTaoResponse response = mapper.map(ctdt, ChuongTrinhDaoTaoResponse.class);
+        response.setHeDaoTao(mapper.map(ctdt.getHeDaoTao(), HeDaoTaoResponse.class));
+        response.setBacDaoTao(mapper.map(ctdt.getBacDaoTao(), BacDaoTaoResponse.class));
+        response.setNganhDaoTao(mapper.map(ctdt.getNganhDaoTao(), NganhDaoTaoResponse.class));
+        response.setNamDaoTao(
+                ctdt.getNamDaoTaos().stream()
+                        .map(NamDaoTao::getNam)
+                        .toList());
+        return response;
+    }
 
     public String createChuongTrinhDaoTao(ChuongTrinhDaoTaoCreationRequest req) {
         if (ctdtRepo.existsById(req.getMaCTDT())) {
@@ -114,10 +128,6 @@ public class ChuongTrinhDaoTaoService {
         ctdtRepo.deleteById(maCTDT);
     }
 
-    // Find: Tìm CTDT theo MaCTDT và trả về thông tin cùng danh sách KeHoachHocTap
-    public ChuongTrinhDaoTaoResponse findCTDT(String maCTDT) {
-        ChuongTrinhDaoTao ctdt = ctdtRepo.findById(maCTDT)
-                .orElseThrow(() -> new AppException("Không tìm thấy chương trình đào tạo"));
-        return mapper.map(ctdt, ChuongTrinhDaoTaoResponse.class);
-    }
+
+
 }
