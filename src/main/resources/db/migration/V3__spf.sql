@@ -9,7 +9,7 @@ START TRANSACTION;
 -- Kiểm tra sự tồn tại của MaCTDT
 IF NOT EXISTS (SELECT 1 FROM ChuongTrinhDaoTao WHERE MaCTDT = p_MaCTDT) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Chuong trinh dao tao khong ton tai.';
+        SET MESSAGE_TEXT = 'Chương trình đào tạo không tồn tại.';
 END IF;
 
     -- Xoá các môn học trong từng kỳ thuộc kế hoạch học tập của chương trình
@@ -53,7 +53,7 @@ START TRANSACTION;
 -- Kiểm tra KHHT tồn tại
 IF NOT EXISTS (SELECT 1 FROM KeHoachHocTap WHERE MaKHHT = p_MaKHHT) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Ke hoach hoc tap khong ton tai.';
+        SET MESSAGE_TEXT = 'Kế hoạch học tập không tồn tại.';
 END IF;
 
     -- Xoá các môn học trong kỳ học thuộc KHHT
@@ -85,7 +85,7 @@ START TRANSACTION;
 -- Kiểm tra kỳ học tồn tại
 IF NOT EXISTS (SELECT 1 FROM KiHoc WHERE MaKi = p_MaKi) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Ki hoc khong ton tai.';
+        SET MESSAGE_TEXT = 'Kì học không tồn tại.';
 END IF;
 
     -- Xoá các môn học trong kỳ học
