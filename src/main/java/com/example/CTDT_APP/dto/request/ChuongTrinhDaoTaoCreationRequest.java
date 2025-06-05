@@ -29,5 +29,5 @@ public class ChuongTrinhDaoTaoCreationRequest {
     private String maNganh;
 
     @NotNull(message = "Danh sách năm đào tạo không được để trống")
-    private Set<Integer> namDaoTaos;
+    private Set<Integer> namDaoTao;
 }

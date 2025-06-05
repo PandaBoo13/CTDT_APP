@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -40,7 +41,7 @@ public class KhoiKienThucService {
 
         log.info("kasad " + req.getParent());
 
-        if (!req.getParent().isBlank()) {
+        if (! Objects.isNull(req.getParent())) {
             KhoiKienThuc ktt = khoiKienThucRepo.findById(req.getParent())
                     .orElseThrow(() -> new AppException("Khối kiến thức cha không tồn tại"));
             khoi.setParent(ktt);

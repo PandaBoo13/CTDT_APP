@@ -91,6 +91,10 @@ public class MonHocService {
         mapper.map(req, monHoc);
         monHoc.setKhoiKienThuc(khoiKienThuc);
 
+        MonHoc updatedMonHoc = monHocRepo.save(monHoc);
+
+        monHocLienQuanService.updateMonHocLienQuan(updatedMonHoc.getMaMon(), req.getQuanHeMonHoc());
+
         return monHocRepo.save(monHoc).getMaMon();
     }
 

@@ -6,4 +6,5 @@ import lombok.Data;
 public class BacDaoTaoResponse {
     private String maBac;
     private String tenCapBac;
+    private Float thoiGianDaoTao;
 }

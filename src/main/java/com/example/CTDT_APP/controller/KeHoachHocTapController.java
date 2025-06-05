@@ -18,10 +18,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KeHoachHocTapController {
 
-    private final KeHoachHocTapService keHoachHocTapService;
+    private final KeHoachHocTapService  keHoachHocTapService;
 
     @GetMapping("/{maCTDT}")
-    public ResponseEntity<ApiResponse> getAllKeHoachHocTap(
+        public ResponseEntity<ApiResponse> getAllKeHoachHocTap(
             @PathVariable String maCTDT
     ) {
         ApiResponse response = ApiResponse.builder()

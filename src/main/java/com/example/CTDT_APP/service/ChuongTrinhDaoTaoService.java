@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,7 +63,7 @@ public class ChuongTrinhDaoTaoService {
         ctdt.setHeDaoTao(heDaoTao);
         ctdt.setNganhDaoTao(nganhDaoTao);
         ctdt.setNamDaoTaos(
-                req.getNamDaoTaos().stream()
+                req.getNamDaoTao().stream()
                 .map(nam -> {
                     if (!namDaoTaoRepo.existsById(nam)) throw new AppException("Năm đào tạo không tồn tại");
                     return NamDaoTao.builder().nam(nam).build();
@@ -88,14 +89,19 @@ public class ChuongTrinhDaoTaoService {
         ctdt.setBacDaoTao(bacDaoTao);
         ctdt.setHeDaoTao(heDaoTao);
         ctdt.setNganhDaoTao(nganhDaoTao);
-        ctdt.setNamDaoTaos(
-                req.getNamDaoTaos().stream()
-                .map(nam -> {
-                    if (!namDaoTaoRepo.existsById(nam)) throw new AppException("Năm đào tạo không tồn tại");
-                    return NamDaoTao.builder().nam(nam).build();
-                })
-                .toList()
-        );
+        if(! Objects.isNull(req.getNamDaoTao())){
+
+            List<NamDaoTao> namDaoTaos = req.getNamDaoTao().stream()
+                    .map(nam -> {
+                        if (!namDaoTaoRepo.existsById(nam)) throw new AppException("Năm đào tạo không tồn tại");
+                        return NamDaoTao.builder().nam(nam).build();
+                    })
+                    .toList();
+
+            ctdt.getNamDaoTaos().clear();
+            ctdt.getNamDaoTaos().addAll(namDaoTaos);
+        }
+
 
         return ctdtRepo.save(ctdt).getMaCTDT();
     }

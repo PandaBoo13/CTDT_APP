@@ -29,6 +29,16 @@ public class ChuyenNganhService {
                 .toList();
     }
 
+    public List<ChuyenNganhReponse> getChuyenNganhByNganh(String id){
+        NganhDaoTao nganhDaoTao = nganhDaoTaoRepository.findById(id)
+                .orElseThrow(() -> new AppException("Không tìm thấy ngành đào tạo"));
+        return chuyenNganhRepo.findAllByNganhDaoTao(nganhDaoTao)
+                .stream()
+                .map(chuyenNganh -> mapper.map(chuyenNganh, ChuyenNganhReponse.class))
+                .toList()
+                ;
+    }
+
     public ChuyenNganhReponse createChuyenNganh(ChuyenNganhCreationRequest req) {
         if (chuyenNganhRepo.existsById(req.getMaChuyenNganh())) throw new AppException("Chuyên ngành đã tồn tại");
 

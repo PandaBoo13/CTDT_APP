@@ -25,5 +25,5 @@ public class ChuongTrinhDaoTaoUpdateRequest {
     @NotBlank(message = "Mã ngành đào tạo không được để trống")
     private String maNganh;
 
-    private Set<Integer> namDaoTaos;
+    private Set<Integer> namDaoTao;
 }
