@@ -13,7 +13,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class    BacDaoTaoService {
+public class BacDaoTaoService {
     private final BacDaoTaoRepository bacDaoTaoRepository;
     private final ModelMapper mapper;
 

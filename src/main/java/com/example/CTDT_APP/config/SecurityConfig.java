@@ -1,9 +1,7 @@
 package com.example.CTDT_APP.config;
 
 import com.example.CTDT_APP.service.MyUserDetailsService;
-
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,7 +17,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -36,19 +33,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtFilter jwtFilter;
-    private final MyUserDetailsService userDetailsService;
-
     public static final String[] AUTH_ENDPOINTS = {
             "/api/v1/tai-khoan/dang-nhap",
             "/api/v1/tai-khoan/dang-ki",
     };
-
     public static final String[] PUBLIC_ENDPOINTS = {
             "api/v1/ctdt/**",
             "api/v1/ke-hoach-hoc-tap/**",
             "api/v1/ki-hoc/**",
     };
+    private final JwtFilter jwtFilter;
+    private final MyUserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

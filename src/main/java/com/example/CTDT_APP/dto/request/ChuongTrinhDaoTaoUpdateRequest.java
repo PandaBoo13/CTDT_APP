@@ -3,7 +3,6 @@ package com.example.CTDT_APP.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-import java.util.List;
 import java.util.Set;
 
 @Data

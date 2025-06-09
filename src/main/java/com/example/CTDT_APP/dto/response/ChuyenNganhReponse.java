@@ -3,7 +3,6 @@ package com.example.CTDT_APP.dto.response;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 public class ChuyenNganhReponse {

@@ -36,7 +36,7 @@ public class MonHocController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateMonHoc(@PathVariable String id ,@RequestBody MonHocUpdateRequest req) {
+    public ResponseEntity<ApiResponse> updateMonHoc(@PathVariable String id, @RequestBody MonHocUpdateRequest req) {
         ApiResponse response = ApiResponse.builder()
                 .message("Update môn học thành công")
                 .data(monHocService.updateMonHoc(id, req))

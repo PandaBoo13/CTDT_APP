@@ -3,9 +3,7 @@ package com.example.CTDT_APP.service;
 import com.example.CTDT_APP.dto.request.KeHoachHocTapCreationRequest;
 import com.example.CTDT_APP.dto.request.KeHoachHocTapUpdateRequest;
 import com.example.CTDT_APP.dto.response.ChuyenNganhBriefResponse;
-import com.example.CTDT_APP.dto.response.KeHoachHocTapDetailsResponse;
 import com.example.CTDT_APP.dto.response.KeHoachHocTapResponse;
-import com.example.CTDT_APP.dto.response.MonHocResponse;
 import com.example.CTDT_APP.entity.*;
 import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.repository.ChuongTrinhDaoTaoRepository;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -45,7 +42,7 @@ public class KeHoachHocTapService {
                             .chuyenNganh(chuyenNganh)
                             .moTa(keHoachHocTap.getMoTa())
                             .build();
-                        })
+                })
                 .toList();
     }
 

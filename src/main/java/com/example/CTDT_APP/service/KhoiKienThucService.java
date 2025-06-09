@@ -37,7 +37,7 @@ public class KhoiKienThucService {
 
         KhoiKienThuc khoi = mapper.map(req, KhoiKienThuc.class);
 
-        if (! Objects.isNull(req.getParent())) {
+        if (!Objects.isNull(req.getParent())) {
             KhoiKienThuc ktt = khoiKienThucRepo.findById(req.getParent())
                     .orElseThrow(() -> new AppException("Khối kiến thức cha không tồn tại"));
             khoi.setParent(ktt);
