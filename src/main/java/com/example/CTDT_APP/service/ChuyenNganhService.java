@@ -29,7 +29,7 @@ public class ChuyenNganhService {
                 .toList();
     }
 
-    public List<ChuyenNganhReponse> getChuyenNganhByNganh(String id){
+    public List<ChuyenNganhReponse> getChuyenNganhByNganh(String id) {
         NganhDaoTao nganhDaoTao = nganhDaoTaoRepository.findById(id)
                 .orElseThrow(() -> new AppException("Không tìm thấy ngành đào tạo"));
         return chuyenNganhRepo.findAllByNganhDaoTao(nganhDaoTao)

@@ -5,7 +5,6 @@ import com.example.CTDT_APP.constant.TrangThai;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -28,8 +27,8 @@ public class TaiKhoanRegisterRequest {
     private String email;
 
     @Pattern(
-        regexp = "^[0-9]{10,15}$",
-        message = "Số điện thoại không hợp lệ"
+            regexp = "^[0-9]{10,15}$",
+            message = "Số điện thoại không hợp lệ"
     )
     private String soDienThoai;
 

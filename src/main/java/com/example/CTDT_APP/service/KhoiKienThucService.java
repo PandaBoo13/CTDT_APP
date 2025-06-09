@@ -5,18 +5,16 @@ import com.example.CTDT_APP.dto.response.KhoiKienThucResponse;
 import com.example.CTDT_APP.entity.KhoiKienThuc;
 import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.repository.KhoiKienThucRepository;
-import com.example.CTDT_APP.repository.MonHocRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,9 +37,7 @@ public class KhoiKienThucService {
 
         KhoiKienThuc khoi = mapper.map(req, KhoiKienThuc.class);
 
-        log.info("kasad " + req.getParent());
-
-        if (! Objects.isNull(req.getParent())) {
+        if (!Objects.isNull(req.getParent())) {
             KhoiKienThuc ktt = khoiKienThucRepo.findById(req.getParent())
                     .orElseThrow(() -> new AppException("Khối kiến thức cha không tồn tại"));
             khoi.setParent(ktt);
@@ -81,30 +77,8 @@ public class KhoiKienThucService {
 
 
     public void deleteKhoiKienThuc(String maKhoi) {
-        khoiKienThucRepo
-                .findById(maKhoi)
-                .map(khoi -> {
-                    if (!khoi.getChildren().isEmpty())
-                        throw new AppException("Khối kiến thức này có khối kiến thức con, không thể xóa");
-                    return khoi;
-                })
-//                .ifPresentOrElse(
-//                        khoi -> khoiKienThucRepo.deleteById(maKhoi),
-//                        () -> {
-//                            throw new AppException("Khối kiến thức không tồn tại");
-//                        }
-//                )
-                .ifPresent(khoiKienThuc -> {
-                    try{
-                        khoiKienThucRepo.deleteById(maKhoi);
-                    } catch(DataIntegrityViolationException e){
-                        if(e.getRootCause() instanceof SQLIntegrityConstraintViolationException){
-                            throw new AppException("Không thể xóa vì đã có môn học tham chiếu đến khối kiến thức này");
-                        }
-                        throw new AppException("Khối kiến thức không tồn tại");
-                    }
-                });
-                ;
+        if (!khoiKienThucRepo.existsById(maKhoi)) throw new AppException("Khối kiến thức không tồn tại");
+        khoiKienThucRepo.deleteById(maKhoi);
     }
 
     private KhoiKienThucResponse toTreeDto(KhoiKienThuc khoiKienThuc) {

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +42,9 @@ public class ChuongTrinhDaoTaoService {
                                     .toList());
                     return response;
                 })
-        .toList();
+                .toList();
     }
+
     // Find: Tìm CTDT theo MaCTDT và trả về thông tin cùng danh sách KeHoachHocTap
     public ChuongTrinhDaoTaoResponse findCTDT(String maCTDT) {
         ChuongTrinhDaoTao ctdt = ctdtRepo.findById(maCTDT)
@@ -78,11 +78,11 @@ public class ChuongTrinhDaoTaoService {
         ctdt.setNganhDaoTao(nganhDaoTao);
         ctdt.setNamDaoTaos(
                 req.getNamDaoTao().stream()
-                .map(nam -> {
-                    if (!namDaoTaoRepo.existsById(nam)) throw new AppException("Năm đào tạo không tồn tại");
-                    return NamDaoTao.builder().nam(nam).build();
-                })
-                .toList()
+                        .map(nam -> {
+                            if (!namDaoTaoRepo.existsById(nam)) throw new AppException("Năm đào tạo không tồn tại");
+                            return NamDaoTao.builder().nam(nam).build();
+                        })
+                        .toList()
         );
 
         return ctdtRepo.save(ctdt).getMaCTDT();
@@ -103,7 +103,7 @@ public class ChuongTrinhDaoTaoService {
         ctdt.setBacDaoTao(bacDaoTao);
         ctdt.setHeDaoTao(heDaoTao);
         ctdt.setNganhDaoTao(nganhDaoTao);
-        if(! Objects.isNull(req.getNamDaoTao())){
+        if (!Objects.isNull(req.getNamDaoTao())) {
 
             List<NamDaoTao> namDaoTaos = req.getNamDaoTao().stream()
                     .map(nam -> {
@@ -127,7 +127,6 @@ public class ChuongTrinhDaoTaoService {
         }
         ctdtRepo.deleteById(maCTDT);
     }
-
 
 
 }

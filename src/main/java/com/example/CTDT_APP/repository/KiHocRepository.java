@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface KiHocRepository extends JpaRepository<KiHoc, String> {
     boolean existsByKiAndKeHoachHocTap(Integer ki, KeHoachHocTap keHoachHocTap);
+
     List<KiHoc> findAllByKeHoachHocTap(KeHoachHocTap keHoachHocTap);
 }

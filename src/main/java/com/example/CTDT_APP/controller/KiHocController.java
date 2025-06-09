@@ -16,7 +16,7 @@ public class KiHocController {
     private final KiHocService kiHocService;
 
     @GetMapping("/{maKHHT}")
-    public ResponseEntity<ApiResponse> getAllKhoiKienThuc(
+    public ResponseEntity<ApiResponse> getAllKiHoc(
             @PathVariable String maKHHT
     ) {
         ApiResponse response = ApiResponse.builder()

@@ -1,9 +1,7 @@
 package com.example.CTDT_APP.config;
 
 import com.example.CTDT_APP.dto.response.ChuyenNganhReponse;
-import com.example.CTDT_APP.dto.response.KeHoachHocTapResponse;
 import com.example.CTDT_APP.entity.ChuyenNganh;
-import com.example.CTDT_APP.entity.KeHoachHocTap;
 import com.example.CTDT_APP.entity.NhanVien;
 import com.example.CTDT_APP.entity.NhanVienResponse;
 import org.modelmapper.ModelMapper;

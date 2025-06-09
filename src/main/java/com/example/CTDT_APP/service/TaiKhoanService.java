@@ -13,7 +13,6 @@ import com.example.CTDT_APP.repository.TaiKhoanRepository;
 import com.example.CTDT_APP.repository.VaiTroRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -106,6 +105,7 @@ public class TaiKhoanService {
         taiKhoan.setMatKhau(passwordEncoder.encode(req.getMatKhauMoi()));
         taiKhoanRepo.save(taiKhoan);
     }
+
     public void doiMatKhau(String id, DoiMatKhauRequest req) {
         TaiKhoan taiKhoan = taiKhoanRepo.findById(id)
                 .orElseThrow(() -> new AppException("Tài khoản không tồn tại"));

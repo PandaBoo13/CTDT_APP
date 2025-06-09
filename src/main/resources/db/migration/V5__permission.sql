@@ -13,10 +13,7 @@ FLUSH PRIVILEGES;
 -- Chỉ cấp quyền thao tác dữ liệu, không được DROP, ALTER, TRUNCATE
 GRANT SELECT, INSERT, UPDATE, DELETE ON CTDT.* TO 'employee_user'@'%';
 
--- Cho phép employee dùng 4 SP
-GRANT EXECUTE ON PROCEDURE CTDT.sp_delete_chuong_trinh_dao_tao TO 'employee_user'@'%';
-GRANT EXECUTE ON PROCEDURE CTDT.sp_delete_ke_hoach_hoc_tap TO 'employee_user'@'%';
-GRANT EXECUTE ON PROCEDURE CTDT.sp_delete_ki_hoc TO 'employee_user'@'%';
+-- Cho phép employee dùng sp
 GRANT EXECUTE ON PROCEDURE CTDT.sp_them_mon_vao_kihoc TO 'employee_user'@'%';
 
 -- Áp dụng thay đổi

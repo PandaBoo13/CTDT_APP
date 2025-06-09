@@ -1,7 +1,5 @@
 package com.example.CTDT_APP.dto.response;
 
-import com.example.CTDT_APP.constant.NgonNgu;
-import com.example.CTDT_APP.constant.TrangThai;
 import com.example.CTDT_APP.entity.KhoiKienThuc;
 import lombok.Builder;
 import lombok.Data;

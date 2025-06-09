@@ -4,12 +4,16 @@ import com.example.CTDT_APP.dto.request.KiHocCreationRequest;
 import com.example.CTDT_APP.dto.request.KiHocMonHocCreationRequest;
 import com.example.CTDT_APP.dto.request.KiHocUpdateRequest;
 import com.example.CTDT_APP.dto.response.MonHocBriefResponse;
-import com.example.CTDT_APP.entity.*;
+import com.example.CTDT_APP.entity.KeHoachHocTap;
+import com.example.CTDT_APP.entity.KiHoc;
+import com.example.CTDT_APP.entity.KihocMonhocId;
+import com.example.CTDT_APP.entity.MonHoc;
 import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.repository.KeHoachHocTapRepository;
 import com.example.CTDT_APP.repository.KiHocMonHocRepository;
 import com.example.CTDT_APP.repository.KiHocRepository;
 import com.example.CTDT_APP.repository.MonHocRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -25,6 +29,7 @@ public class KiHocService {
     private final MonHocRepository monHocRepo;
     private final KiHocMonHocRepository kiHocMonHocRepo;
     private final ModelMapper mapper;
+    private final EntityManager entityManager;
 
     public List<KiHoc> getAllKiHoc(String maKHHT) {
         KeHoachHocTap keHoachHocTap = keHoachHocTapRepo.findById(maKHHT)
@@ -61,27 +66,31 @@ public class KiHocService {
         return kiHocRepo.save(kiHoc).getMaKi();
     }
 
+    @Transactional
     public String createMonHocToKiHoc(String maKi, KiHocMonHocCreationRequest req) {
-        KiHoc kiHoc = kiHocRepo.findById(maKi)
-                .orElseThrow(() -> new AppException("Kỳ học không tồn tại"));
+        if (!kiHocRepo.existsById(maKi)) throw new AppException("Kỳ học không tồn tại");
+        if (!monHocRepo.existsById(req.getMaMon())) throw new AppException("Môn học không tồn tại");
 
-        MonHoc monHoc = monHocRepo.findById(req.getMaMon())
-                .orElseThrow(() -> new AppException("Môn học không tồn tại"));
+        entityManager.createNativeQuery("CALL sp_them_mon_vao_kihoc(?1, ?2, ?3)")
+                .setParameter(1, maKi)
+                .setParameter(2, req.getMaMon())
+                .setParameter(3, req.getLoaiMonHoc())
+                .executeUpdate();
 
-        if (kiHocMonHocRepo.existsById(new KihocMonhocId(maKi, req.getMaMon()))) {
-            throw new AppException("Môn học đã được thêm vào kỳ học này");
-        }
+//        if (kiHocMonHocRepo.existsById(new KihocMonhocId(maKi, req.getMaMon()))) {
+//            throw new AppException("Môn học đã được thêm vào kỳ học này");
+//        }
+//
+//        KiHocMonHoc kihocMonhoc = KiHocMonHoc.builder()
+//                .id(new KihocMonhocId(maKi, req.getMaMon()))
+//                .monHoc(monHoc)
+//                .kiHoc(kiHoc)
+//                .loaiMonHoc(req.getLoaiMonHoc())
+//                .build();
+//
+//        kiHocMonHocRepo.save(kihocMonhoc);
 
-        KiHocMonHoc kihocMonhoc = KiHocMonHoc.builder()
-                .id(new KihocMonhocId(maKi, req.getMaMon()))
-                .monHoc(monHoc)
-                .kiHoc(kiHoc)
-                .loaiMonHoc(req.getLoaiMonHoc())
-                .build();
-
-        kiHocMonHocRepo.save(kihocMonhoc);
-
-        return monHoc.getMaMon();
+        return maKi;
     }
 
     @Transactional
