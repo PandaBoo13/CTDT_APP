@@ -3,7 +3,7 @@ CREATE TRIGGER trg_before_delete_monhoc
     BEFORE DELETE ON MonHoc
     FOR EACH ROW
 BEGIN
-    IF EXISTS (SELECT 1 FROM QuanHeMonHoc WHERE MaMonChinh = OLD.MaMon OR MaMonLienQuan = OLD.MaMon) THEN
+    IF EXISTS (SELECT 1 FROM QuanHeMonHoc WHERE MaMonLienQuan = OLD.MaMon) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Không thể xóa môn học đang có quan hệ tiên quyết';
     END IF;
 

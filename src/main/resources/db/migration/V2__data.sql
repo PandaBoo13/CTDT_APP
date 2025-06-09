@@ -66,15 +66,15 @@ values
 
 INSERT INTO MonHoc (MaMon, TenMon, SoTinChi, SoTietLyThuyet, SoTietBaiTap, SoTietThucHanh, SoTietTuHoc, MaKhoi, TrangThai, NgonNguGiangDay)
 VALUES
-('THCS1', 'Tin học cơ sở 1', 3, 20, 10, 10, 10, NULL, 'HOAT_DONG', 'TIENG_VIET'),
-('THCS2', 'Tin học cơ sở 2', 3, 20, 10, 10, 10, NULL, 'HOAT_DONG', 'TIENG_VIET'),
-('TRR1', 'Toán rời rạc 1', 3, 25, 5, 0, 10, NULL, 'HOAT_DONG', 'TIENG_VIET'),
-('TRR2', 'Toán rời rạc 2', 3, 25, 5, 0, 10, NULL, 'HOAT_DONG', 'TIENG_VIET'),
-('HDH', 'Hệ điều hành', 3, 25, 10, 5, 10, NULL, 'HOAT_DONG', 'TIENG_VIET'),
-('XLTNS', 'Xử lý tín hiệu số', 3, 25, 10, 5, 10, NULL, 'HOAT_DONG', 'TIENG_VIET'),
-('MMT', 'Mạng máy tính', 3, 25, 10, 5, 10, NULL, 'HOAT_DONG', 'TIENG_VIET'),
-('PYTHON', 'Lập trình Python', 3, 20, 10, 10, 10, NULL, 'HOAT_DONG', 'TIENG_VIET'),
-('TTCS', 'Thực tập cơ sở', 2, 0, 0, 30, 10, NULL, 'HOAT_DONG', 'TIENG_VIET');
+('THCS1', 'Tin học cơ sở 1', 3, 20, 10, 10, 10, 'KTC', 'HOAT_DONG', 'TIENG_VIET'),
+('THCS2', 'Tin học cơ sở 2', 3, 20, 10, 10, 10, 'KTC', 'HOAT_DONG', 'TIENG_VIET'),
+('TRR1', 'Toán rời rạc 1', 3, 25, 5, 0, 10, 'KTC', 'HOAT_DONG', 'TIENG_VIET'),
+('TRR2', 'Toán rời rạc 2', 3, 25, 5, 0, 10, 'KTC', 'HOAT_DONG', 'TIENG_VIET'),
+('HDH', 'Hệ điều hành', 3, 25, 10, 5, 10, 'KTCB', 'HOAT_DONG', 'TIENG_VIET'),
+('XLTNS', 'Xử lý tín hiệu số', 3, 25, 10, 5, 10, 'KTCB', 'HOAT_DONG', 'TIENG_VIET'),
+('MMT', 'Mạng máy tính', 3, 25, 10, 5, 10, 'KTCB', 'HOAT_DONG', 'TIENG_VIET'),
+('PYTHON', 'Lập trình Python', 3, 20, 10, 10, 10, 'KTCS', 'HOAT_DONG', 'TIENG_VIET'),
+('TTCS', 'Thực tập cơ sở', 2, 0, 0, 30, 10, 'KTCS', 'HOAT_DONG', 'TIENG_VIET');
 
 INSERT INTO QuanHeMonHoc (MaMonChinh, MaMonLienQuan, LoaiDieuKien)
 VALUES
