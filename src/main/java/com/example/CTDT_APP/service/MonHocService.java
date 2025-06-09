@@ -7,9 +7,13 @@ import com.example.CTDT_APP.dto.response.MonHocResponse;
 import com.example.CTDT_APP.dto.response.QuanHeMonHocResponse;
 import com.example.CTDT_APP.entity.KhoiKienThuc;
 import com.example.CTDT_APP.entity.MonHoc;
+import com.example.CTDT_APP.entity.QuanHeMonHoc;
+import com.example.CTDT_APP.entity.QuanHeMonHocId;
 import com.example.CTDT_APP.exception.AppException;
 import com.example.CTDT_APP.repository.KhoiKienThucRepository;
+import com.example.CTDT_APP.repository.KiHocMonHocRepository;
 import com.example.CTDT_APP.repository.MonHocRepository;
+import com.example.CTDT_APP.repository.QuanHeMonHocRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -26,6 +30,7 @@ public class MonHocService {
     private final KhoiKienThucRepository khoiKienThucRepo;
     private final ModelMapper mapper;
     private final MonHocLienQuanService monHocLienQuanService;
+    private final QuanHeMonHocRepository quanHeMonHocRepo;
 
     public List<MonHocResponse> getAllMonHoc() {
         return monHocRepo.findAll().stream()
@@ -97,8 +102,17 @@ public class MonHocService {
         return monHocRepo.save(monHoc).getMaMon();
     }
 
+    @Transactional
     public void deleteMonHoc(String maMonHoc) {
-        if (!monHocRepo.existsById(maMonHoc)) throw new AppException("Môn học không tồn tại");
+        MonHoc monhoc = monHocRepo.findById(maMonHoc)
+                .orElseThrow(() -> new AppException("Môn học không tồn tại"));
+
+        if (monhoc.getDsMonLienQuan() != null && !monhoc.getDsMonLienQuan().isEmpty()) {
+            for (QuanHeMonHoc quanHeMonHoc : monhoc.getDsMonLienQuan()) {
+                quanHeMonHocRepo.deleteById(new QuanHeMonHocId(maMonHoc, quanHeMonHoc.getMonLienQuan().getMaMon()));
+            }
+        }
+
         monHocRepo.deleteById(maMonHoc);
     }
 }
