@@ -7,5 +7,3 @@ target/
 *.jar
 *.war
 *.ear
-*.yml
-*.yaml
