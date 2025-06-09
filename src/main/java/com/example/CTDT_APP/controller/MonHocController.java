@@ -43,4 +43,14 @@ public class MonHocController {
                 .build();
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteMonHoc(@PathVariable String id) {
+        monHocService.deleteMonHoc(id);
+        ApiResponse response = ApiResponse.builder()
+                .code(204)
+                .message("Xoá môn học thành công")
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }
