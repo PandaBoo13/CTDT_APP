@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,11 +38,21 @@ public class SecurityConfig {
             "/api/v1/tai-khoan/dang-nhap",
             "/api/v1/tai-khoan/dang-ki",
     };
-    public static final String[] PUBLIC_ENDPOINTS = {
+    public static final String[] EDUCATION_PROGRAM_ENDPOINTS = {
             "api/v1/ctdt/**",
             "api/v1/ke-hoach-hoc-tap/**",
             "api/v1/ki-hoc/**",
+            "api/v1/mon-hoc/**",
+            "api/v1/nam-dao-tao/**",
     };
+
+    public static final String[] COMMON_ENDPOINTS = {
+            "api/v1/bac-dao-tao/**", "api/v1/nganh-dao-tao/**",
+            "api/v1/chuyen-nganh/**", "api/v1/khoa/**",
+            "api/v1/mon-hoc/**", "api/v1/khoi-kien-thuc/**",
+            "api/v1/he-dao-tao/**",
+    };
+
     private final JwtFilter jwtFilter;
     private final MyUserDetailsService userDetailsService;
 
@@ -49,11 +60,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .cors(httpSecurityCorsConfigurer -> corsConfigurationSource())
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers(AUTH_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(request -> {
+                    request
+                            .requestMatchers(AUTH_ENDPOINTS).permitAll()
+                            .requestMatchers(HttpMethod.GET, EDUCATION_PROGRAM_ENDPOINTS).permitAll()
+                            .requestMatchers("api/v1/nhan-vien/**").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.GET, COMMON_ENDPOINTS).hasAnyRole("ADMIN", "EMPLOYEE")
+                            .requestMatchers(HttpMethod.POST, EDUCATION_PROGRAM_ENDPOINTS).hasAnyRole("ADMIN", "EMPLOYEE")
+                            .anyRequest().hasRole("EMPLOYEE");
+                })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler(new AccessDeniedHandlerImpl())

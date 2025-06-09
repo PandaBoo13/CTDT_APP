@@ -74,7 +74,7 @@ public class KiHocService {
         entityManager.createNativeQuery("CALL sp_them_mon_vao_kihoc(?1, ?2, ?3)")
                 .setParameter(1, maKi)
                 .setParameter(2, req.getMaMon())
-                .setParameter(3, req.getLoaiMonHoc())
+                .setParameter(3, String.valueOf(req.getLoaiMonHoc()))
                 .executeUpdate();
 
 //        if (kiHocMonHocRepo.existsById(new KihocMonhocId(maKi, req.getMaMon()))) {
