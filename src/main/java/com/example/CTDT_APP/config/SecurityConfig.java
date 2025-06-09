@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,6 +37,7 @@ public class SecurityConfig {
             "/api/v1/tai-khoan/dang-nhap",
             "/api/v1/tai-khoan/dang-ki",
     };
+
     public static final String[] EDUCATION_PROGRAM_ENDPOINTS = {
             "api/v1/ctdt/**",
             "api/v1/ke-hoach-hoc-tap/**",
@@ -53,6 +53,13 @@ public class SecurityConfig {
             "api/v1/he-dao-tao/**",
     };
 
+    public static final String[] ADMIN_ENDPOINTS = {
+            "api/v1/nhan-vien/**",
+            "api/v1/tai-khoan/cap-mat-khau/**",
+            "api/v1/tai-khoan/block/**",
+            "api/v1/tai-khoan/active/**",
+    };
+
     private final JwtFilter jwtFilter;
     private final MyUserDetailsService userDetailsService;
 
@@ -64,9 +71,10 @@ public class SecurityConfig {
                     request
                             .requestMatchers(AUTH_ENDPOINTS).permitAll()
                             .requestMatchers(HttpMethod.GET, EDUCATION_PROGRAM_ENDPOINTS).permitAll()
-                            .requestMatchers("api/v1/nhan-vien/**").hasRole("ADMIN")
                             .requestMatchers(HttpMethod.GET, COMMON_ENDPOINTS).hasAnyRole("ADMIN", "EMPLOYEE")
                             .requestMatchers(HttpMethod.POST, EDUCATION_PROGRAM_ENDPOINTS).hasAnyRole("ADMIN", "EMPLOYEE")
+                            .requestMatchers(ADMIN_ENDPOINTS).hasRole("ADMIN")
+                            .requestMatchers("api/v1/tai-khoan/doi-mat-khau/**").hasAnyRole("ADMIN", "EMPLOYEE")
                             .anyRequest().hasRole("EMPLOYEE");
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -90,3 +90,171 @@ BEGIN
     END IF;
 END;
 
+-- =============================================================================================
+-- DELIMITER $$
+--
+-- CREATE FUNCTION IsCTDTActive(pMaCTDT VARCHAR(21)) RETURNS BOOLEAN
+--     DETERMINISTIC
+--     READS SQL DATA
+-- BEGIN
+--     DECLARE vTrangThai ENUM('HOAT_DONG', 'NGUNG_HOAT_DONG');
+-- SELECT TrangThai INTO vTrangThai
+-- FROM ChuongTrinhDaoTao
+-- WHERE MaCTDT = pMaCTDT;
+--
+-- RETURN vTrangThai = 'HOAT_DONG';
+-- END$$
+--
+-- DELIMITER ;
+--
+-- DELIMITER $$
+--
+-- CREATE TRIGGER trg_block_update_ctdt_when_active
+--     BEFORE UPDATE ON ChuongTrinhDaoTao
+--     FOR EACH ROW
+-- BEGIN
+--     IF OLD.TrangThai = 'HOAT_DONG' THEN
+--         SIGNAL SQLSTATE '45000'
+--         SET MESSAGE_TEXT = 'Không được sửa Chương trình đào tạo đang hoạt động.';
+-- END IF;
+-- END$$
+--
+-- DELIMITER ;
+--
+-- DELIMITER $$
+--
+-- CREATE TRIGGER trg_block_delete_ctdt_when_active
+--     BEFORE DELETE ON ChuongTrinhDaoTao
+--     FOR EACH ROW
+-- BEGIN
+--     IF OLD.TrangThai = 'HOAT_DONG' THEN
+--         SIGNAL SQLSTATE '45000'
+--         SET MESSAGE_TEXT = 'Không được xoá Chương trình đào tạo đang hoạt động.';
+-- END IF;
+-- END$$
+--
+-- DELIMITER ;
+--
+-- DELIMITER $$
+--
+-- CREATE TRIGGER trg_block_update_khht_when_ctdt_active
+--     BEFORE UPDATE ON KeHoachHocTap
+--     FOR EACH ROW
+-- BEGIN
+--     IF IsCTDTActive(OLD.MaCTDT) THEN
+--         SIGNAL SQLSTATE '45000'
+--         SET MESSAGE_TEXT = 'Không được sửa Kế hoạch học tập thuộc CTĐT đang hoạt động.';
+-- END IF;
+-- END$$
+--
+-- DELIMITER ;
+--
+-- DELIMITER $$
+--
+-- CREATE TRIGGER trg_block_delete_khht_when_ctdt_active
+--     BEFORE DELETE ON KeHoachHocTap
+--     FOR EACH ROW
+-- BEGIN
+--     IF IsCTDTActive(OLD.MaCTDT) THEN
+--         SIGNAL SQLSTATE '45000'
+--         SET MESSAGE_TEXT = 'Không được xoá Kế hoạch học tập thuộc CTĐT đang hoạt động.';
+-- END IF;
+-- END$$
+--
+-- DELIMITER ;
+--
+-- DELIMITER $$
+--
+-- CREATE TRIGGER trg_block_update_kihoc_when_ctdt_active
+--     BEFORE UPDATE ON KiHoc
+--     FOR EACH ROW
+-- BEGIN
+--     DECLARE vMaCTDT VARCHAR(21);
+--
+--     SELECT MaCTDT INTO vMaCTDT
+--     FROM KeHoachHocTap
+--     WHERE MaKHHT = OLD.MaKHHT;
+--
+--     IF IsCTDTActive(vMaCTDT) THEN
+--         SIGNAL SQLSTATE '45000'
+--         SET MESSAGE_TEXT = 'Không được sửa Kỳ học thuộc CTĐT đang hoạt động.';
+-- END IF;
+-- END$$
+--
+-- DELIMITER ;
+--
+-- DELIMITER $$
+--
+-- CREATE TRIGGER trg_block_delete_kihoc_when_ctdt_active
+--     BEFORE DELETE ON KiHoc
+--     FOR EACH ROW
+-- BEGIN
+--     DECLARE vMaCTDT VARCHAR(21);
+--
+--     SELECT MaCTDT INTO vMaCTDT
+--     FROM KeHoachHocTap
+--     WHERE MaKHHT = OLD.MaKHHT;
+--
+--     IF IsCTDTActive(vMaCTDT) THEN
+--         SIGNAL SQLSTATE '45000'
+--         SET MESSAGE_TEXT = 'Không được xoá Kỳ học thuộc CTĐT đang hoạt động.';
+-- END IF;
+-- END$$
+--
+-- DELIMITER ;
+--
+-- DELIMITER $$
+--
+-- CREATE TRIGGER trg_block_update_monhoc_in_ki_when_ctdt_active
+--     BEFORE UPDATE ON KiHoc_MonHoc
+--     FOR EACH ROW
+-- BEGIN
+--     DECLARE vMaKHHT VARCHAR(21);
+--     DECLARE vMaCTDT VARCHAR(21);
+--
+--     SELECT MaKHHT INTO vMaKHHT
+--     FROM KiHoc
+--     WHERE MaKi = OLD.MaKi;
+--
+--     SELECT MaCTDT INTO vMaCTDT
+--     FROM KeHoachHocTap
+--     WHERE MaKHHT = vMaKHHT;
+--
+--     IF IsCTDTActive(vMaCTDT) THEN
+--         SIGNAL SQLSTATE '45000'
+--         SET MESSAGE_TEXT = 'Không được sửa môn học trong kỳ thuộc CTĐT đang hoạt động.';
+-- END IF;
+-- END$$
+--
+-- DELIMITER ;
+--
+-- DELIMITER $$
+--
+-- CREATE TRIGGER trg_block_delete_monhoc_in_ki_when_ctdt_active
+--     BEFORE DELETE ON KiHoc_MonHoc
+--     FOR EACH ROW
+-- BEGIN
+--     DECLARE vMaKHHT VARCHAR(21);
+--     DECLARE vMaCTDT VARCHAR(21);
+--
+--     SELECT MaKHHT INTO vMaKHHT
+--     FROM KiHoc
+--     WHERE MaKi = OLD.MaKi;
+--
+--     SELECT MaCTDT INTO vMaCTDT
+--     FROM KeHoachHocTap
+--     WHERE MaKHHT = vMaKHHT;
+--
+--     IF IsCTDTActive(vMaCTDT) THEN
+--         SIGNAL SQLSTATE '45000'
+--         SET MESSAGE_TEXT = 'Không được xoá môn học trong kỳ thuộc CTĐT đang hoạt động.';
+-- END IF;
+-- END$$
+--
+-- DELIMITER ;
+
+
+
+
+
+

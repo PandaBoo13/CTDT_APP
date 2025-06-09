@@ -8,7 +8,6 @@ import com.example.CTDT_APP.service.TaiKhoanService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -48,7 +47,6 @@ public class TaiKhoanController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/active/{maTaiKhoan}")
     public ResponseEntity<ApiResponse> activeTaiKhoan(@PathVariable String maTaiKhoan) {
         taiKhoanService.activeTaiKhoan((maTaiKhoan));
@@ -80,7 +78,6 @@ public class TaiKhoanController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/cap-mat-khau/{maTaiKhoan}")
     public ResponseEntity<ApiResponse> capMatKhau(@PathVariable String maTaiKhoan, @RequestBody DoiMatKhauRequest request) {
         taiKhoanService.capMatKhau(maTaiKhoan, request);

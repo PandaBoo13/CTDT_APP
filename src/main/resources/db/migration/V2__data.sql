@@ -31,7 +31,7 @@ values
 
 insert into NhanVien (MaNhanVien, HoTen, NgayThangNamSinh, SoDienThoai, Email, GioiTinh, MaTaiKhoan)
 values
-('123', 'Nguyen Van A', '2000/01/20', '12345678910', 'employee@gmail.com', 'NAM','employee');
+('123', 'Nguyen Van A', '2000/01/20', '09123456789', 'employee@gmail.com', 'NAM','employee');
 
 
 # Data Bac Dao Tao
