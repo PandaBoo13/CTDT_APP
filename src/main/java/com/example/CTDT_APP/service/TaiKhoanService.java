@@ -84,7 +84,7 @@ public class TaiKhoanService {
     public void activeTaiKhoan(String maTaiKhoan) {
         TaiKhoan taiKhoan = taiKhoanRepo.findById(maTaiKhoan)
                 .orElseThrow(() -> new AppException("Tài khoản không tồn tại"));
-        taiKhoan.setTrangThai(TrangThai.HOAT_DONG);
+        taiKhoan.setTrangThai(taiKhoan.getTrangThai());
         taiKhoanRepo.save(taiKhoan);
     }
 
