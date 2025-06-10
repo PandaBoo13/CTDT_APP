@@ -36,16 +36,6 @@ BEGIN
     END IF;
 END;
 
--- tg khoa
-CREATE TRIGGER trg_before_delete_khoa
-    BEFORE DELETE ON Khoa
-    FOR EACH ROW
-BEGIN
-    IF EXISTS (SELECT 1 FROM NganhDaoTao WHERE MaKhoa = OLD.MaKhoa) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Không thể xóa khoa đang có ngành đào tạo';
-    END IF;
-END;
-
 CREATE TRIGGER trg_before_delete_bacdaotao
     BEFORE DELETE ON BacDaoTao
     FOR EACH ROW
@@ -91,170 +81,38 @@ BEGIN
 END;
 
 -- =============================================================================================
--- DELIMITER $$
---
--- CREATE FUNCTION IsCTDTActive(pMaCTDT VARCHAR(21)) RETURNS BOOLEAN
---     DETERMINISTIC
---     READS SQL DATA
--- BEGIN
---     DECLARE vTrangThai ENUM('HOAT_DONG', 'NGUNG_HOAT_DONG');
--- SELECT TrangThai INTO vTrangThai
--- FROM ChuongTrinhDaoTao
--- WHERE MaCTDT = pMaCTDT;
---
--- RETURN vTrangThai = 'HOAT_DONG';
--- END$$
---
--- DELIMITER ;
---
--- DELIMITER $$
---
--- CREATE TRIGGER trg_block_update_ctdt_when_active
---     BEFORE UPDATE ON ChuongTrinhDaoTao
---     FOR EACH ROW
--- BEGIN
---     IF OLD.TrangThai = 'HOAT_DONG' THEN
---         SIGNAL SQLSTATE '45000'
---         SET MESSAGE_TEXT = 'Không được sửa Chương trình đào tạo đang hoạt động.';
--- END IF;
--- END$$
---
--- DELIMITER ;
---
--- DELIMITER $$
---
--- CREATE TRIGGER trg_block_delete_ctdt_when_active
---     BEFORE DELETE ON ChuongTrinhDaoTao
---     FOR EACH ROW
--- BEGIN
---     IF OLD.TrangThai = 'HOAT_DONG' THEN
---         SIGNAL SQLSTATE '45000'
---         SET MESSAGE_TEXT = 'Không được xoá Chương trình đào tạo đang hoạt động.';
--- END IF;
--- END$$
---
--- DELIMITER ;
---
--- DELIMITER $$
---
--- CREATE TRIGGER trg_block_update_khht_when_ctdt_active
---     BEFORE UPDATE ON KeHoachHocTap
---     FOR EACH ROW
--- BEGIN
---     IF IsCTDTActive(OLD.MaCTDT) THEN
---         SIGNAL SQLSTATE '45000'
---         SET MESSAGE_TEXT = 'Không được sửa Kế hoạch học tập thuộc CTĐT đang hoạt động.';
--- END IF;
--- END$$
---
--- DELIMITER ;
---
--- DELIMITER $$
---
--- CREATE TRIGGER trg_block_delete_khht_when_ctdt_active
---     BEFORE DELETE ON KeHoachHocTap
---     FOR EACH ROW
--- BEGIN
---     IF IsCTDTActive(OLD.MaCTDT) THEN
---         SIGNAL SQLSTATE '45000'
---         SET MESSAGE_TEXT = 'Không được xoá Kế hoạch học tập thuộc CTĐT đang hoạt động.';
--- END IF;
--- END$$
---
--- DELIMITER ;
---
--- DELIMITER $$
---
--- CREATE TRIGGER trg_block_update_kihoc_when_ctdt_active
---     BEFORE UPDATE ON KiHoc
---     FOR EACH ROW
--- BEGIN
---     DECLARE vMaCTDT VARCHAR(21);
---
---     SELECT MaCTDT INTO vMaCTDT
---     FROM KeHoachHocTap
---     WHERE MaKHHT = OLD.MaKHHT;
---
---     IF IsCTDTActive(vMaCTDT) THEN
---         SIGNAL SQLSTATE '45000'
---         SET MESSAGE_TEXT = 'Không được sửa Kỳ học thuộc CTĐT đang hoạt động.';
--- END IF;
--- END$$
---
--- DELIMITER ;
---
--- DELIMITER $$
---
--- CREATE TRIGGER trg_block_delete_kihoc_when_ctdt_active
---     BEFORE DELETE ON KiHoc
---     FOR EACH ROW
--- BEGIN
---     DECLARE vMaCTDT VARCHAR(21);
---
---     SELECT MaCTDT INTO vMaCTDT
---     FROM KeHoachHocTap
---     WHERE MaKHHT = OLD.MaKHHT;
---
---     IF IsCTDTActive(vMaCTDT) THEN
---         SIGNAL SQLSTATE '45000'
---         SET MESSAGE_TEXT = 'Không được xoá Kỳ học thuộc CTĐT đang hoạt động.';
--- END IF;
--- END$$
---
--- DELIMITER ;
---
--- DELIMITER $$
---
--- CREATE TRIGGER trg_block_update_monhoc_in_ki_when_ctdt_active
---     BEFORE UPDATE ON KiHoc_MonHoc
---     FOR EACH ROW
--- BEGIN
---     DECLARE vMaKHHT VARCHAR(21);
---     DECLARE vMaCTDT VARCHAR(21);
---
---     SELECT MaKHHT INTO vMaKHHT
---     FROM KiHoc
---     WHERE MaKi = OLD.MaKi;
---
---     SELECT MaCTDT INTO vMaCTDT
---     FROM KeHoachHocTap
---     WHERE MaKHHT = vMaKHHT;
---
---     IF IsCTDTActive(vMaCTDT) THEN
---         SIGNAL SQLSTATE '45000'
---         SET MESSAGE_TEXT = 'Không được sửa môn học trong kỳ thuộc CTĐT đang hoạt động.';
--- END IF;
--- END$$
---
--- DELIMITER ;
---
--- DELIMITER $$
---
--- CREATE TRIGGER trg_block_delete_monhoc_in_ki_when_ctdt_active
---     BEFORE DELETE ON KiHoc_MonHoc
---     FOR EACH ROW
--- BEGIN
---     DECLARE vMaKHHT VARCHAR(21);
---     DECLARE vMaCTDT VARCHAR(21);
---
---     SELECT MaKHHT INTO vMaKHHT
---     FROM KiHoc
---     WHERE MaKi = OLD.MaKi;
---
---     SELECT MaCTDT INTO vMaCTDT
---     FROM KeHoachHocTap
---     WHERE MaKHHT = vMaKHHT;
---
---     IF IsCTDTActive(vMaCTDT) THEN
---         SIGNAL SQLSTATE '45000'
---         SET MESSAGE_TEXT = 'Không được xoá môn học trong kỳ thuộc CTĐT đang hoạt động.';
--- END IF;
--- END$$
---
--- DELIMITER ;
+DELIMITER $$
 
+CREATE TRIGGER trg_before_delete_kihoc_monhoc
+    BEFORE DELETE ON KiHoc_MonHoc
+    FOR EACH ROW
+BEGIN
+    DECLARE v_maKHHT VARCHAR(21);
+    DECLARE v_ki_hien_tai INT;
+    DECLARE v_has_dependent_subjects INT DEFAULT 0;
 
+    -- Lấy thông tin về kế hoạch học tập và kỳ hiện tại của môn học sắp bị xóa
+    SELECT kh.MaKHHT, kh.Ki
+    INTO v_maKHHT, v_ki_hien_tai
+    FROM KiHoc kh
+    WHERE kh.MaKi = OLD.MaKi;
 
+    -- Kiểm tra xem có môn học phụ thuộc nào trong cùng kế hoạch học tập không
+    SELECT COUNT(*) INTO v_has_dependent_subjects
+    FROM QuanHeMonHoc qh
+             JOIN KiHoc_MonHoc kmh ON qh.MaMonChinh = kmh.MaMon
+             JOIN KiHoc k ON kmh.MaKi = k.MaKi
+    WHERE qh.MaMonLienQuan = OLD.MaMon  -- Môn đang bị xóa là môn tiên quyết
+      AND k.MaKHHT = v_maKHHT           -- Cùng kế hoạch học tập
+      AND k.Ki > v_ki_hien_tai
+      AND qh.LoaiDieuKien IN ('TIEN_QUYET', 'HOC_TRUOC'); -- Chỉ kiểm tra điều kiện tiên quyết
 
+    -- Nếu tìm thấy môn phụ thuộc, không cho phép xóa
+    IF v_has_dependent_subjects > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Không thể xóa môn học này vì có môn học khác phụ thuộc vào nó trong cùng kế hoạch học tập.';
+END IF;
 
+END$$
 
+DELIMITER ;
